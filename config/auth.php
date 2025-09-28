@@ -40,8 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+            'cookie' => env('ADMIN_SESSION_COOKIE', 'admin_session'),
+        ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -63,6 +67,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Domains\Auth\Models\Admin::class,
         ],
 
         // 'users' => [
