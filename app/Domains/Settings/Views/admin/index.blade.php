@@ -1,0 +1,133 @@
+@extends('layouts.master')
+
+@section('css')
+<link href="{{ URL::asset('assets/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ URL::asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
+<!--- Internal Sweet-Alert css-->
+<link href="{{URL::asset('assets/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet">
+@endsection
+
+@section('page-header')
+<div class="breadcrumb-header justify-content-between">
+    <div class="my-auto">
+        <div class="d-flex">
+            <h4 class="content-title mb-0 my-auto">الإعدادات</h4>
+            <span class="text-muted mt-1 tx-13 mr-2 mb-0">/ بيانات النظام</span>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+        <div class="card">
+            <div class="card-body">
+
+                <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">اسم المشروع</label>
+                            <input type="text" name="project_name" class="form-control"
+                                value="{{ old('project_name', $settings->project_name ?? '') }}" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3 phone">
+                            <label class="form-label">رقم الهاتف</label>
+                            <input type="tel" name="phone" id="phone" class="form-control"
+                                value="{{ old('phone', $settings->phone ?? '') }}" required>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">شرح قصير</label>
+                            <textarea name="short_description" rows="3" class="form-control" required>{{ old('short_description', $settings->short_description ?? '') }}</textarea>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">العنوان</label>
+                            <input type="text" name="address" class="form-control"
+                                value="{{ old('address', $settings->address ?? '') }}">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">شعار المشروع (Logo)</label>
+                            <input type="file" name="logo" class="dropify" data-height="150"
+                                data-default-file="{{ isset($settings->logo) ? asset('storage/' . $settings->logo) : '' }}">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">صورة البراند (Brand)</label>
+                            <input type="file" name="brand_image" class="dropify" data-height="150"
+                                data-default-file="{{ isset($settings->brand_image) ? asset('storage/' . $settings->brand_image) : '' }}">
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary"> حفظ التغييرات</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('js')
+<script src="{{ URL::asset('assets/plugins/fileuploads/js/fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fileuploads/js/file-upload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
+<!--Internal  Sweet-Alert js-->
+<script src="{{URL::asset('assets/plugins/sweet-alert/sweetalert.min.js')}}"></script>
+<script src="{{URL::asset('assets/plugins/sweet-alert/jquery.sweet-alert.js')}}"></script>
+<!-- Sweet-alert js  -->
+<script src="{{URL::asset('assets/plugins/sweet-alert/sweetalert.min.js')}}"></script>
+<script src="{{URL::asset('assets/js/sweet-alert.js')}}"></script>
+<script>
+    @if(session('success'))
+        swal({
+            title: "نجاح",
+            text: "{{ session('success') }}",
+            type: "success",
+            confirmButtonText: "موافق"
+        });
+    @endif
+
+    @if(session('error'))
+        swal({
+            title: "خطأ",
+            text: "{{ session('error') }}",
+            type: "error",
+            confirmButtonText: "إغلاق"
+        });
+    @endif
+
+    @if(session('warning'))
+        swal({
+            title: "تنبيه",
+            text: "{{ session('warning') }}",
+            type: "warning",
+            confirmButtonText: "تمام"
+        });
+    @endif
+
+    @if(session('info'))
+        swal({
+            title: "معلومة",
+            text: "{{ session('info') }}",
+            type: "info",
+            confirmButtonText: "حسناً"
+        });
+    @endif
+</script>
+
+@endsection

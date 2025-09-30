@@ -7,18 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Domains\Auth\Models\Admin;
+use Illuminate\Support\Facades\Route;
 
 class LoginController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('guest.admin')->except('logout');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth.admin')->except('logout');
+    // }
     
     public function showLoginForm()
     {
         if (Auth::guard('admin')->check()) {
-            return redirect()->route('admin.dashboard');
+            if (Route::has('admin.dashboard')) {
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect('/admin/dashboard');
         }
         return view('auth::admin.login');
     }
@@ -34,7 +38,10 @@ class LoginController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard');
+            if (Route::has('admin.dashboard')) {
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect('/admin/dashboard');
         }
 
         return back()->withErrors(['email' => 'Invalid credentials']);

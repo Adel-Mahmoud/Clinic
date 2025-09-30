@@ -9,10 +9,4 @@ Route::prefix('admin')->middleware('web')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
     Route::get('register', [LoginController::class, 'showRegisterForm'])->name('admin.register');
     Route::post('register', [LoginController::class, 'register'])->name('admin.register.submit');
-
-    Route::middleware('auth.admin')->group(function () {
-        Route::get('dashboard', function () {
-            return 'Admin Dashboard';
-        })->name('admin.dashboard');
-    });
 });

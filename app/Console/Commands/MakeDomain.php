@@ -75,7 +75,7 @@ class MakeDomain extends Command
         
         use Illuminate\\Support\\Facades\\Route;
         
-        Route::prefix('{$lowercaseName}')->group(function () {
+        Route::middleware('web')->prefix('{$lowercaseName}')->group(function () {
             Route::get('/', [App\\Domains\\{$name}\\Controllers\\Web\\{$className}Controller::class, 'index']);
         });
         PHP;
@@ -85,7 +85,7 @@ class MakeDomain extends Command
         
         use Illuminate\\Support\\Facades\\Route;
         
-        Route::prefix('admin')->group(function () {
+        Route::middleware(['web','auth:admin'])->prefix('admin')->group(function () {
             Route::prefix('{$lowercaseName}')->group(function () {
                 Route::get('/', [App\\Domains\\{$name}\\Controllers\\Admin\\{$className}Controller::class, 'index']);
             });
