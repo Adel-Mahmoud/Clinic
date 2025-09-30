@@ -4,6 +4,7 @@ namespace App\Domains\Settings\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Domains\Settings\Repositories\SettingEntityRepository;
+use App\Domains\Settings\Requests\SettingRequest;
 use Illuminate\Http\Request;
 
 class SettingEntityController extends Controller
@@ -21,16 +22,10 @@ class SettingEntityController extends Controller
         return view('settings::admin.index', compact('settings'));
     }
 
-    public function update(Request $request)
+    public function update(SettingRequest $request)
     {
-        $validated = $request->validate([
-            'project_name'   => 'required|string|max:255',
-            'short_description'    => 'nullable|string|max:500',
-            'phone'          => 'nullable|string|max:20',
-            'address'        => 'nullable|string|max:255',
-            'logo'           => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
-            'brand_image'          => 'nullable|image|mimes:png,jpg,jpeg,svg|max:2048',
-        ]);
+        $validated = $request->validated();
+
         if ($request->hasFile('logo')) {
             $validated['logo'] = $request->file('logo')->store('settings', 'public');
         }

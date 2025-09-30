@@ -4,3 +4,19 @@ body {
 .phone .iti--allow-dropdown{
     width: 100%;
 }
+.main-logo{
+    height: 4rem !important;
+}
+.main-sidebar-header{
+    display: block !important;
+}
+@media (max-width: 768px) and (min-width: 574px) {
+    .responsive-logo .logo-1 {
+        height: 4rem !important;
+    }
+}
+@media (max-width: 574px) {
+    .responsive-logo .logo-2 {
+        height: 4rem !important;
+    }
+}

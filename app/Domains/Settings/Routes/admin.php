@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Domains\Settings\Controllers\Admin\SettingEntityController;
 
-Route::middleware(['web', 'auth:admin'])
+Route::middleware(['web', 'auth.admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
