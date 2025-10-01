@@ -1,5 +1,5 @@
 <!-- Title -->
-<title> {{ config('settings.logo') }} </title>
+<title> {{ config('settings.project_name') }} {{ isset($titlePage) ? ' - ' . $titlePage : ''}} </title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!-- Favicon -->
 <link rel="icon" href="{{ asset('storage/' . config('settings.logo') ) ?? '' }}" type="image/x-icon"/>

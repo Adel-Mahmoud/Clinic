@@ -2,24 +2,24 @@
 
 namespace App\Domains\Users\Repositories;
 
-use App\Domains\Auth\Models\Admin;
+use App\Domains\Users\Models\UserEntity;
 
 class UserEntityRepository
 {
     public function all()
     {
-        return Admin::latest()->get();
+        return UserEntity::latest()->get();
     }
 
     public function find($id)
     {
-        return Admin::findOrFail($id);
+        return UserEntity::findOrFail($id);
     }
 
     public function create(array $data)
     {
         $data['password'] = bcrypt($data['password']);
-        return Admin::create($data);
+        return UserEntity::create($data);
     }
 
     public function update($id, array $data)
@@ -38,6 +38,6 @@ class UserEntityRepository
 
     public function delete($id)
     {
-        return Admin::destroy($id);
+        return UserEntity::destroy($id);
     }
 }

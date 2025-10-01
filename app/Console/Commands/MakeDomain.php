@@ -11,7 +11,8 @@ class MakeDomain extends Command
     protected $signature = 'make:domain {name : The name of the domain}
                             {--table : Generate migration table}
                             {--policy : Generate policy class}
-                            {--repository : Generate repository class}';
+                            {--repository : Generate repository class}
+                            {--livewire : Generate livewire class}';
 
     protected $description = 'Create a new domain structure';
 

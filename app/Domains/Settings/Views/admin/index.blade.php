@@ -1,4 +1,5 @@
-@extends('layouts.master')
+@extends('layouts.master',['titlePage'=>$titlePage])
+<x-page-header :titlePage="$titlePage" />
 
 @section('css')
 <link href="{{ URL::asset('assets/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
@@ -27,7 +28,7 @@
                 <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
-                    
+
                     <div class="row">
 
                         <div class="col-md-6 mb-3">
@@ -92,42 +93,18 @@
 <!-- Sweet-alert js  -->
 <script src="{{URL::asset('assets/plugins/sweet-alert/sweetalert.min.js')}}"></script>
 <script src="{{URL::asset('assets/js/sweet-alert.js')}}"></script>
+@if(session('swal'))
 <script>
-    @if(session('success'))
-        swal({
-            title: "نجاح",
-            text: "{{ session('success') }}",
-            type: "success",
-            confirmButtonText: "موافق"
-        });
-    @endif
+    document.addEventListener("DOMContentLoaded", function() {
+        const swalData = @json(session('swal'));
 
-    @if(session('error'))
         swal({
-            title: "خطأ",
-            text: "{{ session('error') }}",
-            type: "error",
-            confirmButtonText: "إغلاق"
+            title: swalData.title || "تمت العملية بنجاح",
+            text: swalData.text || "",
+            icon: swalData.icon || "success",
+            button: "موافق"
         });
-    @endif
-
-    @if(session('warning'))
-        swal({
-            title: "تنبيه",
-            text: "{{ session('warning') }}",
-            type: "warning",
-            confirmButtonText: "تمام"
-        });
-    @endif
-
-    @if(session('info'))
-        swal({
-            title: "معلومة",
-            text: "{{ session('info') }}",
-            type: "info",
-            confirmButtonText: "حسناً"
-        });
-    @endif
+    });
 </script>
-
+@endif
 @endsection

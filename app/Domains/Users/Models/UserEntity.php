@@ -6,5 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserEntity extends Model
 {
-    protected $guarded = [];
+    protected $table = 'users';
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+    ];
 }

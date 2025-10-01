@@ -19,7 +19,10 @@ class SettingEntityController extends Controller
     public function index()
     {
         $settings = $this->repository->all()->first();
-        return view('settings::admin.index', compact('settings'));
+
+        $sectionPage = 'المستخدمين';
+        $titlePage = 'الإعدادات';
+        return view('settings::admin.index', compact('settings', 'titlePage'));
     }
 
     public function update(SettingRequest $request)
@@ -36,6 +39,12 @@ class SettingEntityController extends Controller
 
         $this->repository->save($validated);
 
-        return redirect()->back()->with('success', 'تم حفظ الإعدادات بنجاح ');
+        return redirect()->back()->with([
+            'swal' => [
+                'title' => 'تم حفظ الإعدادات بنجاح',
+                'text'  => '',
+                'type'  => 'success',
+            ]
+        ]);
     }
 }

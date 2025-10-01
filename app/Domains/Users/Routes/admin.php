@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Domains\Users\Controllers\Admin\UserEntityController;
 
-Route::middleware(['web','auth.admin'])->prefix('admin')->group(function () {
-    Route::prefix('users')->group(function () {
-        Route::get('/', [App\Domains\Users\Controllers\Admin\UserEntityController::class, 'index']);
-    });
+Route::middleware(['web','auth.admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('users', UserEntityController::class);
 });
