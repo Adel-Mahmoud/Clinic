@@ -1,4 +1,4 @@
-@props(['sectionPage' => null, 'titlePage'])
+@props(['sectionPage' => null, 'titlePage' => 'Title Page'])
 
 @section('page-header')
 <div class="breadcrumb-header justify-content-between">

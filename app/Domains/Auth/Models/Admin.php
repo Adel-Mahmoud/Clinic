@@ -2,12 +2,13 @@
 
 namespace App\Domains\Auth\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
 
     protected $fillable = [
         'name',
