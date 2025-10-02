@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Domains\RolePermission\Controllers;
+namespace App\Domains\Role\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Domains\RolePermission\Repositories\RoleEntityRepository;
-use App\Domains\RolePermission\Requests\RoleRequest;
-use Spatie\Permission\Models\Role;
+use App\Domains\Role\Repositories\RoleEntityRepository;
+use App\Domains\Role\Requests\RoleRequest;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -23,7 +22,7 @@ class RoleEntityController extends Controller
     {
         $titlePage = 'الأدوار';
         $roles = $this->repository->all();
-        return view('rolepermission::admin.index', compact('roles', 'titlePage'));
+        return view('role::admin.index', compact('roles', 'titlePage'));
     }
 
     public function create(): View
@@ -31,7 +30,7 @@ class RoleEntityController extends Controller
         $sectionPage = 'الأدوار';
         $titlePage = 'دور جديد';
         $permissions = Permission::all();
-        return view('rolepermission::admin.create', compact('sectionPage', 'titlePage', 'permissions'));
+        return view('role::admin.create', compact('sectionPage', 'titlePage', 'permissions'));
     }
 
     public function store(RoleRequest $request): RedirectResponse
@@ -39,9 +38,7 @@ class RoleEntityController extends Controller
         $role = $this->repository->create($request->validated());
 
         if ($request->has('permissions')) {
-            $permissions = Permission::whereIn('id', $request->permissions)->pluck('name')->toArray();
-
-            $role->syncPermissions($permissions);
+            $role->syncPermissions($request->permissions);
         }
 
         return redirect()
@@ -59,7 +56,7 @@ class RoleEntityController extends Controller
         $titlePage = 'تعديل دور';
         $role = $this->repository->find($id);
         $permissions = Permission::all();
-        return view('rolepermission::admin.edit', compact('role', 'sectionPage', 'titlePage', 'permissions'));
+        return view('role::admin.edit', compact('role', 'sectionPage', 'titlePage', 'permissions'));
     }
 
     public function update(RoleRequest $request, $id): RedirectResponse

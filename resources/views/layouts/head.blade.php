@@ -12,6 +12,7 @@
 <!-- Sidemenu css -->
 <link rel="stylesheet" href="{{URL::asset('assets/css-rtl/sidemenu.css')}}">
 @yield('css')
+@stack('css')
 <!--- Style css -->
 <link href="{{URL::asset('assets/css-rtl/style.css')}}" rel="stylesheet">
 <!--- Dark-mode css -->

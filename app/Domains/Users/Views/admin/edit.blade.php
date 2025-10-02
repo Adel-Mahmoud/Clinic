@@ -33,6 +33,25 @@
                             @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">الأدوار</label>
+                            <select name="roles[]" class="form-control" multiple required>
+                                @foreach($roles as $role)
+                                <option value="{{ $role->name }}"
+                                    @if(isset($user) && $user->roles->pluck('name')->contains($role->name))
+                                    selected
+                                    @elseif(is_array(old('roles')) && in_array($role->name, old('roles')))
+                                    selected
+                                    @endif
+                                    >
+                                    {{ $role->name }}
+                                </option>
+                                @endforeach
+                            </select>
+
+                            @error('roles') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+
                     </div>
 
                     <button type="submit" class="btn btn-primary">تحديث</button>

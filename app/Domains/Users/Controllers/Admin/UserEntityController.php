@@ -6,12 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Domains\Users\Repositories\UserEntityRepository;
 use App\Domains\Users\Requests\UserRequest;
 use Illuminate\Http\RedirectResponse;
+use Spatie\Permission\Models\Role;
 use Illuminate\View\View;
 
 class UserEntityController extends Controller
 {
     protected UserEntityRepository $repository;
-    
+
     public function __construct(UserEntityRepository $repository)
     {
         $this->repository = $repository;
@@ -28,7 +29,8 @@ class UserEntityController extends Controller
     {
         $sectionPage = 'المستخدمين';
         $titlePage = 'مستخدم جديد';
-        return view('users::admin.create', compact('sectionPage', 'titlePage'));
+        $roles = Role::all();
+        return view('users::admin.create', compact('sectionPage', 'titlePage', 'roles'));
     }
 
     public function store(UserRequest $request): RedirectResponse
@@ -49,7 +51,8 @@ class UserEntityController extends Controller
         $sectionPage = 'المستخدمين';
         $titlePage = 'تعديل مستخدم';
         $user = $this->repository->find($id);
-        return view('users::admin.edit', compact('user','sectionPage', 'titlePage'));
+        $roles = Role::all();
+        return view('users::admin.edit', compact('user', 'sectionPage', 'titlePage', 'roles'));
     }
 
     public function update(UserRequest $request, $id): RedirectResponse

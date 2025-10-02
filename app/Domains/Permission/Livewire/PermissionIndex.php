@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Domains\RolePermission\Livewire;
+namespace App\Domains\Permission\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
-class RoleIndex extends Component
+class PermissionIndex extends Component
 {
     use WithPagination;
 
@@ -17,7 +17,7 @@ class RoleIndex extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = [
-        'deleteRole',
+        'deletePermission',
         'deleteSelected',
         'refreshComponent' => '$refresh',
     ];
@@ -27,14 +27,14 @@ class RoleIndex extends Component
         $this->resetPage();
     }
 
-    public function deleteRole($id)
+    public function deletePermission($id)
     {
         if ($id) {
-            Role::findOrFail($id)->delete();
+            Permission::findOrFail($id)->delete();
 
             $this->dispatch('swal:success', [
                 'title' => 'تم الحذف!',
-                'text'  => 'تم حذف الدور بنجاح.'
+                'text'  => 'تم حذف الصلاحية بنجاح.'
             ]);
 
             $this->dispatch('refreshComponent');
@@ -44,7 +44,7 @@ class RoleIndex extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = Role::pluck('id')->toArray();
+            $this->selected = Permission::pluck('id')->toArray();
         } else {
             $this->selected = [];
         }
@@ -65,7 +65,7 @@ class RoleIndex extends Component
         if (empty($this->selected)) {
             $this->dispatch('swal:error', [
                 'title' => 'لم يتم التحديد',
-                'text'  => 'يرجى تحديد أدوار للحذف أولاً.'
+                'text'  => 'يرجى تحديد صلاحيات للحذف أولاً.'
             ]);
             return;
         }
@@ -73,7 +73,7 @@ class RoleIndex extends Component
         $this->dispatch('swal:confirm', [
             'type'  => 'bulk',
             'title' => 'هل أنت متأكد؟',
-            'text'  => 'سيتم حذف ' . count($this->selected) . ' دور ولا يمكن التراجع!',
+            'text'  => 'سيتم حذف ' . count($this->selected) . ' صلاحية ولا يمكن التراجع!',
         ]);
     }
 
@@ -81,14 +81,14 @@ class RoleIndex extends Component
     {
         if (empty($this->selected)) return;
 
-        Role::whereIn('id', $this->selected)->delete();
+        Permission::whereIn('id', $this->selected)->delete();
 
         $this->selected = [];
         $this->selectAll = false;
 
         $this->dispatch('swal:success', [
             'title' => 'تم الحذف!',
-            'text'  => 'تم حذف الأدوار المحددة بنجاح.',
+            'text'  => 'تم حذف الصلاحيات المحددة بنجاح.',
         ]);
 
         $this->dispatch('refreshComponent');
@@ -96,12 +96,13 @@ class RoleIndex extends Component
 
     public function render()
     {
-        $roles = Role::with('permissions') 
-            ->when($this->search, function ($query) {
+        $permissions = Permission::when($this->search, function ($query) {
                 $query->where('name', 'like', "%{$this->search}%");
             })
             ->paginate(10);
 
-        return view('rolepermission::livewire.role-index', compact('roles'));
+        return view('permission::livewire.permission-index', compact('permissions'));
     }
 }
+
+

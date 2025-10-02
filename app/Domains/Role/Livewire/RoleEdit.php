@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\RolePermission\Livewire;
+namespace App\Domains\Role\Livewire;
 
 use Livewire\Component;
 use Spatie\Permission\Models\Role;

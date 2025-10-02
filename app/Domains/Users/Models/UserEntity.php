@@ -2,11 +2,14 @@
 
 namespace App\Domains\Users\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class UserEntity extends Model
+class UserEntity extends Authenticatable
 {
-    protected $table = 'users';
+    use HasRoles;
+    protected $table = 'admins';
+    protected string $guard_name = 'web';
     protected $fillable = [
         'name',
         'email',

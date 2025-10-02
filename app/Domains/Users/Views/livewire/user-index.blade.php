@@ -39,6 +39,7 @@
                             <th>#</th>
                             <th>الاسم</th>
                             <th>البريد الإلكتروني</th>
+                            <th>الادوار</th>
                             <th>تاريخ الإنشاء</th>
                             <th width="150">الإجراءات</th>
                         </tr>
@@ -46,7 +47,7 @@
                     <tbody>
                         @forelse ($users as $user)
                         <tr class="@if(in_array($user->id, $selected)) table-active @endif">
-                            <td>
+                            <td>                                
                                 <input type="checkbox"
                                     wire:model.live="selected"
                                     value="{{ $user->id }}"
@@ -55,6 +56,11 @@
                             <td>{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
+                            <td>
+                                @foreach($user->getRoleNames() as $role)
+                                <span class="badge bg-info">{{ $role }}</span>
+                                @endforeach
+                            </td>
                             <td>{{ $user->created_at->format('Y-m-d') }}</td>
                             <td>
                                 <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-warning">

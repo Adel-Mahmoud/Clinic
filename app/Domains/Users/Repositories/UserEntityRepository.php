@@ -19,7 +19,13 @@ class UserEntityRepository
     public function create(array $data)
     {
         $data['password'] = bcrypt($data['password']);
-        return UserEntity::create($data);
+        $user = UserEntity::create($data);
+
+        if (isset($data['roles'])) {
+            $user->syncRoles($data['roles']);
+        }
+
+        return $user;
     }
 
     public function update($id, array $data)
@@ -33,6 +39,11 @@ class UserEntityRepository
         }
 
         $user->update($data);
+
+        if (isset($data['roles'])) {
+            $user->syncRoles($data['roles']);
+        }
+
         return $user;
     }
 

@@ -2,5 +2,5 @@
 <x-page-header :titlePage="$titlePage" />
 
 @section('content')
-<livewire:role-permission.role-index />
+<livewire:role.role-index />
 @endsection
