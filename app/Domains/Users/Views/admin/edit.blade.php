@@ -54,7 +54,9 @@
 
                     </div>
 
+                    @can('edit user')
                     <button type="submit" class="btn btn-primary">تحديث</button>
+                    @endcan
                     <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">إلغاء</a>
                 </form>
 

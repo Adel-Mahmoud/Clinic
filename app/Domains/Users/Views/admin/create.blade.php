@@ -43,7 +43,9 @@
                     </div>
 
                     <div class="text-center mt-3">
+                        @can('create user')
                         <button type="submit" class="btn btn-primary">إضافة المستخدم</button>
+                        @endcan
                         <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">رجوع</a>
                     </div>
                 </form>

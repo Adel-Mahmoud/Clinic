@@ -16,6 +16,11 @@ class RoleEntityController extends Controller
     public function __construct(RoleEntityRepository $repository)
     {
         $this->repository = $repository;
+        // Permissions
+        $this->middleware('permission:view roles')->only(['index']);
+        $this->middleware('permission:create role')->only(['create', 'store']);
+        $this->middleware('permission:edit role')->only(['edit', 'update']);
+        $this->middleware('permission:delete role')->only(['destroy']);
     }
 
     public function index(): View

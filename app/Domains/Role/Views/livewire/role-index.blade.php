@@ -12,13 +12,17 @@
             </div>
             <div class="col-12 col-md-8 text-md-end text-left">
                 @if(count($selected) > 0)
+                @can('delete role')
                 <button wire:click="confirmDeleteSelected" class="btn btn-danger">
                     <i class="fas fa-trash"></i> حذف العناصر المحددة ({{ count($selected) }})
                 </button>
+                @endcan
                 @else
+                @can('create role')
                 <a href="{{ route('admin.roles.create') }}" class="btn btn-primary mb-2 mb-md-0">
                     <i class="fas fa-plus"></i> إضافة دور جديد
                 </a>
+                @endcan
                 @endif
             </div>
         </div>
@@ -59,13 +63,16 @@
                             </td>
                             <td>{{ $role->created_at->format('Y-m-d') }}</td>
                             <td>
+                                @can('edit role')
                                 <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button wire:click="confirmDelete({{ $role->id }})"
-                                    class="btn btn-sm btn-danger">
+                                @endcan
+                                @can('delete role')
+                                <button wire:click="confirmDelete({{ $role->id }})" class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                @endcan
                             </td>
                         </tr>
                         @empty

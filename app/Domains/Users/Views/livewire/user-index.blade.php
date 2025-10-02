@@ -12,13 +12,17 @@
             </div>
             <div class="col-12 col-md-8 text-md-end text-left">
                 @if(count($selected) > 0)
+                @can('delete user')
                 <button wire:click="confirmDeleteSelected" class="btn btn-danger">
                     <i class="fas fa-trash"></i> حذف العناصر المحددة ({{ count($selected) }})
                 </button>
+                @endcan
                 @else
+                @can('create user')
                 <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-2 mb-md-0">
                     <i class="fas fa-plus"></i> إضافة مستخدم جديد
                 </a>
+                @endcan
                 @endif
             </div>
         </div>
@@ -63,13 +67,16 @@
                             </td>
                             <td>{{ $user->created_at->format('Y-m-d') }}</td>
                             <td>
+                                @can('edit user')
                                 <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <button wire:click="confirmDelete({{ $user->id }})"
-                                    class="btn btn-sm btn-danger">
+                                @endcan
+                                @can('delete user')
+                                <button wire:click="confirmDelete({{ $user->id }})" class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                @endcan
                             </td>
                         </tr>
                         @empty
