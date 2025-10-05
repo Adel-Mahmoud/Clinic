@@ -3,7 +3,7 @@
 namespace App\Domains\Users\Livewire;
 
 use Livewire\Component;
-use App\Domains\Users\Models\UserEntity;
+use App\Domains\Auth\Models\Admin as UserEntity; 
 use Livewire\WithPagination;
 
 class UserIndex extends Component
@@ -31,8 +31,16 @@ class UserIndex extends Component
     public function deleteUser($id)
     {
         if ($id) {
+            if (auth('admin')->id() == $id) {
+                $this->dispatch('swal:success', [
+                    'title' => 'خطأ!',
+                    'text'  => 'لا يمكنك حذف نفسك.',
+                ]);
+                return;
+            }            
+            
             UserEntity::findOrFail($id)->delete();
-
+            
             $this->dispatch('swal:success', [
                 'title' => 'تم الحذف!',
                 'text'  => 'تم حذف المستخدم بنجاح.'

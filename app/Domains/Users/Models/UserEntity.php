@@ -9,7 +9,7 @@ class UserEntity extends Authenticatable
 {
     use HasRoles;
     protected $table = 'admins';
-    protected string $guard_name = 'web';
+    protected $guard_name = 'admin';
     protected $fillable = [
         'name',
         'email',

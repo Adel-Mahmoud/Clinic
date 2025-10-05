@@ -22,7 +22,7 @@
                             <div class="card-sigin">
                                 <div class="mb-5 d-flex">
                                     <img src="{{ config('settings.logo') ? asset('storage/' . config('settings.logo')) : URL::asset('assets/img/brand/favicon.png') }}" class="sign-favicon ht-40" alt="الشعار">
-                                    <h1 class="main-logo1 ml-1 mr-0 my-auto tx-28">لوحة <span>الإدارة</span></h1>
+                                    <h1 class="main-logo1 ml-1 mr-0 my-auto tx-28">{{ config('settings.project_name') }}</span></h1>
                                 </div>
                                 <div class="card-sigin">
                                     <div class="main-signup-header">

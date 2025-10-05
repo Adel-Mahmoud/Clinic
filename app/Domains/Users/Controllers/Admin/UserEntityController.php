@@ -68,7 +68,24 @@ class UserEntityController extends Controller
 
     public function destroy($id): RedirectResponse
     {
+        if (auth('admin')->id() == $id) {
+            return redirect()
+                ->route('admin.users.index')
+                ->with('swal', [
+                    'type'  => 'error',
+                    'title' => 'خطأ!',
+                    'text'  => 'لا يمكنك حذف حسابك الشخصي.',
+                ]);
+        }
+
         $this->repository->delete($id);
-        return redirect()->route('admin.users.index')->with('success', 'تم حذف المستخدم بنجاح');
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with('swal', [
+                'type'  => 'success',
+                'title' => 'تم الحذف!',
+                'text'  => 'تم حذف المستخدم بنجاح.',
+            ]);
     }
 }

@@ -51,7 +51,7 @@
                     <tbody>
                         @forelse ($users as $user)
                         <tr class="@if(in_array($user->id, $selected)) table-active @endif">
-                            <td>                                
+                            <td>
                                 <input type="checkbox"
                                     wire:model.live="selected"
                                     value="{{ $user->id }}"
@@ -73,9 +73,11 @@
                                 </a>
                                 @endcan
                                 @can('delete user')
-                                <button wire:click="confirmDelete({{ $user->id }})" class="btn btn-sm btn-danger">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                    @if (auth('admin')->id() !== $user->id)
+                                    <button wire:click="confirmDelete({{ $user->id }})" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    @endif
                                 @endcan
                             </td>
                         </tr>
