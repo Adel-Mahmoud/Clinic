@@ -4,7 +4,13 @@ body {
 .phone .iti--allow-dropdown{
     width: 100%;
 }
-.main-logo{
+.side-menu__item i{
+    color: #6c757d!important;
+}
+.side-menu__item.active i{
+    color: #277aec  !important;
+}
+/* .main-logo{
     height: 4rem !important;
 }
 .main-sidebar-header{
@@ -25,4 +31,4 @@ body {
 }
 .sign-favicon{
     height: 80px !important;
-}
+} */

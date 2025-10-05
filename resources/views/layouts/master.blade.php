@@ -30,9 +30,14 @@
 			@yield('content')
 			@include('layouts.sidebar')
 			@include('layouts.models')
-			@include('layouts.footer')
-			@livewireScripts
-			@include('layouts.footer-scripts')
+		</div>
+		<!-- Container closed -->
+	</div>
+	<!-- main-content closed -->
+	@include('layouts.footer')
+	@livewireScripts
+	@include('layouts.footer-scripts')
+	<!-- row closed -->
 </body>
 
 </html>
