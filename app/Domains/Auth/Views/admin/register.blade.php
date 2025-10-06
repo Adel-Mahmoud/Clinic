@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('admin.register.submit') }}">
+<!-- <form method="POST" action="{{ route('admin.register.submit') }}">
     @csrf
     <div>
         <label>الاسم</label>
@@ -21,4 +21,4 @@
     </div>
 
     <button type="submit">تسجيل</button>
-</form>
+</form> -->

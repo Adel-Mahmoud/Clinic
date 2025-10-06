@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Domains\Auth\Models;
- 
+
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use App\Domains\Doctors\Models\DoctorEntity;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable
@@ -14,7 +15,7 @@ class Admin extends Authenticatable
     protected $guard_name = 'admin';
     protected $fillable = [
         'name',
-        'email', 
+        'email',
         'password',
     ];
 
@@ -26,4 +27,9 @@ class Admin extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function doctor()
+    {
+        return $this->hasOne(DoctorEntity::class);
+    }
 }

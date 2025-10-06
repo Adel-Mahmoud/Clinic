@@ -10,6 +10,15 @@ return [
         'badge-color'  => 'success',
     ],
     [
+        'label'  => 'الاطباء',
+        'type'   => 'dropdown',
+        'icon'   => '<i class="fas fa-user-nurse menu-icon"></i>',
+        'children' => [
+            ['label' => 'عرض الكل', 'url' => '/admin/doctors'],
+            ['label' => 'إضافة جديد', 'url' => '/admin/doctors/create'],
+        ],
+    ],
+    [
         'label'  => 'المستخدمين',
         'type'   => 'dropdown',
         'icon'   => '<i class="fas fa-users menu-icon"></i>',

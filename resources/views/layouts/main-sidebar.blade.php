@@ -25,7 +25,7 @@
 				</div>
 				<div class="user-info">
 					<h4 class="font-weight-semibold mt-3 mb-0">{{ auth('admin')->user()->name ?? 'No Name' }}</h4>
-					<span class="mb-0 text-muted">Premium Member</span>
+					<span class="mb-0 text-muted">{{ auth('admin')->user()->email ?? 'No Email' }}</span>
 				</div>
 			</div>
 		</div>

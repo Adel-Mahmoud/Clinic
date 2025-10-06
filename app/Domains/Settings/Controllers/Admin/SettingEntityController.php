@@ -14,9 +14,6 @@ class SettingEntityController extends Controller
     public function __construct(SettingEntityRepository $repository)
     {
         $this->repository = $repository;
-        // Permissions
-        $this->middleware('permission:view settings')->only(['index']);
-        $this->middleware('permission:edit settings')->only(['update']);
     }
 
     public function index()

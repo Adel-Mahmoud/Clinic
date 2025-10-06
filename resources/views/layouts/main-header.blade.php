@@ -265,7 +265,7 @@
 							<div class="d-flex wd-100p">
 								<div class="main-img-user"><img alt="" src="{{URL::asset('assets/img/faces/6.jpg')}}" class=""></div>
 								<div class="mr-3 my-auto">
-									<h6>{{ auth('admin')->user()->name ?? 'No Name'  }}</h6><span>Premium Member</span>
+									<h6>{{ auth('admin')->user()->name ?? 'No Name'  }}</h6><span>{{ auth('admin')->user()->email ?? 'No Email' }}</span>
 								</div>
 							</div>
 						</div>
