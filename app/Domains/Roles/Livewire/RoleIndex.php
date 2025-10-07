@@ -17,7 +17,7 @@ class RoleIndex extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = [
-        'deleteRole',
+        'deleteItem',
         'deleteSelected',
         'refreshComponent' => '$refresh',
     ];
@@ -27,7 +27,7 @@ class RoleIndex extends Component
         $this->resetPage();
     }
 
-    public function deleteRole($id)
+    public function deleteItem($id)
     {
         if ($id) {
             Role::findOrFail($id)->delete();

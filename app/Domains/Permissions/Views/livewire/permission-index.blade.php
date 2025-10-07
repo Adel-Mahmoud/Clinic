@@ -1,4 +1,4 @@
-<x-sweet-alert section="Permission">
+<x-sweet-alert>
     <div>
         <div class="card">
             <div class="m-3 row g-3 align-items-center">

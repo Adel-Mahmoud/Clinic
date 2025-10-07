@@ -3,7 +3,7 @@
 namespace App\Domains\Users\Livewire;
 
 use Livewire\Component;
-use App\Domains\Auth\Models\Admin as UserEntity; 
+use App\Domains\Auth\Models\Admin as UserEntity;
 use Livewire\WithPagination;
 
 class UserIndex extends Component
@@ -18,7 +18,7 @@ class UserIndex extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = [
-        'deleteUser'     => 'deleteUser',
+        'deleteItem'     => 'deleteItem',
         'deleteSelected' => 'deleteSelected',
         'refreshComponent' => '$refresh',
     ];
@@ -28,22 +28,22 @@ class UserIndex extends Component
         $this->resetPage();
     }
 
-    public function deleteUser($id)
+    public function deleteItem($id)
     {
         if ($id) {
             if (auth('admin')->id() == $id) {
-                $this->dispatch('swal:success', [
+                $this->dispatch('swal:error', [
                     'title' => 'خطأ!',
                     'text'  => 'لا يمكنك حذف نفسك.',
                 ]);
                 return;
-            }            
-            
+            }
+
             UserEntity::findOrFail($id)->delete();
-            
+
             $this->dispatch('swal:success', [
                 'title' => 'تم الحذف!',
-                'text'  => 'تم حذف المستخدم بنجاح.'
+                'text'  => 'تم حذف البيانات بنجاح.'
             ]);
 
             $this->dispatch('refreshComponent');
@@ -92,16 +92,17 @@ class UserIndex extends Component
             return;
         }
 
-        UserEntity::whereIn('id', $this->selected)->delete();
+        UserEntity::whereIn('id', $this->selected)
+            ->where('id', '!=', auth('admin')->id())
+            ->delete();
 
         $this->selected = [];
         $this->selectAll = false;
 
         $this->dispatch('swal:success', [
-            'title' => 'تم الحذف!',
-            'text' => 'تم حذف المستخدمين المحددين بنجاح.',
+            'title' => 'تم الحذف',
+            'text' => 'تم حذف العناصر المحددة بنجاح',
         ]);
-
         $this->dispatch('refreshComponent');
     }
 

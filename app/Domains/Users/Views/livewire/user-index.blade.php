@@ -1,4 +1,3 @@
-<x-sweet-alert section="User">
 <div>
     <div class="card">
         <div class="m-3 row g-3 align-items-center">
@@ -85,4 +84,3 @@
         </div>
     </div>
 </div>
-</x-sweet-alert> 

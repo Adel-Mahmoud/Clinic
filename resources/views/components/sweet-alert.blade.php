@@ -1,5 +1,3 @@
-@props(['section' => null])
-
 @push('css')
 <link href="{{ URL::asset('assets/plugins/sweet-alert/sweetalert.css') }}" rel="stylesheet">
 @endpush
@@ -27,7 +25,7 @@
             if (detail.type === 'bulk') {
                 Livewire.dispatch('deleteSelected');
             } else {
-                Livewire.dispatch('delete{{ $section }}', [detail.id]);
+                Livewire.dispatch('deleteItem', [detail.id]);
             }
         });
     });

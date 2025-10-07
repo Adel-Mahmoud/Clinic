@@ -20,7 +20,6 @@ class SettingEntityController extends Controller
     {
         $settings = $this->repository->all()->first();
 
-        $sectionPage = 'المستخدمين';
         $titlePage = 'الإعدادات';
         return view('settings::admin.index', compact('settings', 'titlePage'));
     }

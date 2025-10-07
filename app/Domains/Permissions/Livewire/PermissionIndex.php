@@ -17,7 +17,7 @@ class PermissionIndex extends Component
     protected $paginationTheme = 'bootstrap';
 
     protected $listeners = [
-        'deletePermission',
+        'deleteItem',
         'deleteSelected',
         'refreshComponent' => '$refresh',
     ];
@@ -27,7 +27,7 @@ class PermissionIndex extends Component
         $this->resetPage();
     }
 
-    public function deletePermission($id)
+    public function deleteItem($id)
     {
         if ($id) {
             Permission::findOrFail($id)->delete();
