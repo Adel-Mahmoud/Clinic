@@ -6,17 +6,8 @@ return [
         'type'   => 'link',
         'icon'   => '<i class="fas fa-home menu-icon"></i>',
         'url'    => '/admin/dashboard',
-        'badge'  => 1,
-        'badge-color'  => 'success',
-    ],
-    [
-        'label'  => 'الاطباء',
-        'type'   => 'dropdown',
-        'icon'   => '<i class="fas fa-user-nurse menu-icon"></i>',
-        'children' => [
-            ['label' => 'عرض الكل', 'url' => '/admin/doctors'],
-            ['label' => 'إضافة جديد', 'url' => '/admin/doctors/create'],
-        ],
+        // 'badge'  => 1,
+        // 'badge-color'  => 'success',
     ],
     [
         'label'  => 'المستخدمين',
