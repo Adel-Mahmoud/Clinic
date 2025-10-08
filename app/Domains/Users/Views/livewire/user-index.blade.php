@@ -16,7 +16,7 @@
                 @endif
             </div>
         </div>
-        <div class="card-header pb-0">
+        <div class="card-header pb-0"> 
             <h4 class="card-title">قائمة المستخدمين</h4>
             @if(count($selected) > 0)
             <div class="text-muted mt-1">تم تحديد {{ count($selected) }} مستخدم</div>

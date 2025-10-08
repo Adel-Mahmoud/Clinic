@@ -1,20 +1,42 @@
+<!-- <div>
+    <x-datatable 
+        section="المستخدمين"
+        :items="$users"
+        searchPlaceholder="بحث بالاسم أو البريد"
+        canCreate="create user"
+        createRoute="admin.users.create"
+        createLabel="إضافة مستخدم جديد"
+        editPermission="edit user"
+        deletePermission="delete user"
+        editRoutePrefix="admin.users"
+        :columns="[
+            ['label' => 'الاسم', 'field' => 'name'],
+            ['label' => 'البريد الإلكتروني', 'field' => 'email'],
+            ['label' => 'الأدوار', 'raw' => true, 'field' => 'name'],
+            ['label' => 'تاريخ الإنشاء', 'field' => 'created_at'],
+        ]"
+    />
+</div> -->
+
+
+
 @props([
-    'searchPlaceholder' => 'بحث...',
-    'items',
-    'columns' => [],
-    'canCreate' => null,
-    'createRoute' => null,
-    'createLabel' => 'إضافة جديد',
-    'createIcon' => 'fas fa-plus',
-    'editPermission' => null,
-    'deletePermission' => null,
-    'editRoutePrefix' => null,
-    'iconEmpty' => 'fas fa-database',
-    'emptyText' => 'لا توجد بيانات',
-    'selected' => [],
-    'selectAll' => false,
-    'section' => '',
-    'actions' => true,
+'searchPlaceholder' => 'بحث...',
+'items',
+'columns' => [],
+'canCreate' => null,
+'createRoute' => null,
+'createLabel' => 'إضافة جديد',
+'createIcon' => 'fas fa-plus',
+'editPermission' => null,
+'deletePermission' => null,
+'editRoutePrefix' => null,
+'iconEmpty' => 'fas fa-database',
+'emptyText' => 'لا توجد بيانات',
+'selected' => [],
+'selectAll' => false,
+'section' => '',
+'actions' => true,
 ])
 
 <div>
@@ -74,14 +96,23 @@
                                     <td>
                                         @php
                                             $replaceMap = [];
-                                            foreach((array)$item->getAttributes() as $key => $value) {
+
+                                            foreach ((array) $item->getAttributes() as $key => $value) {
                                                 $replaceMap['{'.$key.'}'] = $value;
                                             }
 
-                                            foreach($item->getRelations() as $relationName => $relationValue) {
-                                                if(is_object($relationValue)) {
-                                                    foreach((array)$relationValue->getAttributes() as $key => $value) {
+                                            foreach ($item->getRelations() as $relationName => $relationValue) {
+                                                if ($relationValue instanceof \Illuminate\Database\Eloquent\Model) {
+                                                    foreach ((array) $relationValue->getAttributes() as $key => $value) {
                                                         $replaceMap['{'.$relationName.'.'.$key.'}'] = $value;
+                                                    }
+                                                } elseif ($relationValue instanceof \Illuminate\Database\Eloquent\Collection) {
+                                                    foreach ($relationValue as $index => $relatedItem) {
+                                                        if ($relatedItem instanceof \Illuminate\Database\Eloquent\Model) {
+                                                            foreach ((array) $relatedItem->getAttributes() as $key => $value) {
+                                                                $replaceMap['{'.$relationName.'.'.$index.'.'.$key.'}'] = $value;
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -101,15 +132,24 @@
 
                                 <td>
                                     @php
-                                        // إنشاء خريطة استبدال عامة لكل الخصائص والعلاقات
                                         $replaceMap = [];
-                                        foreach((array)$item->getAttributes() as $key => $value) {
+
+                                        foreach ((array) $item->getAttributes() as $key => $value) {
                                             $replaceMap['{'.$key.'}'] = $value;
                                         }
-                                        foreach($item->getRelations() as $relationName => $relationValue) {
-                                            if(is_object($relationValue)) {
-                                                foreach((array)$relationValue->getAttributes() as $key => $value) {
+
+                                        foreach ($item->getRelations() as $relationName => $relationValue) {
+                                            if ($relationValue instanceof \Illuminate\Database\Eloquent\Model) {
+                                                foreach ((array) $relationValue->getAttributes() as $key => $value) {
                                                     $replaceMap['{'.$relationName.'.'.$key.'}'] = $value;
+                                                }
+                                            } elseif ($relationValue instanceof \Illuminate\Database\Eloquent\Collection) {
+                                                foreach ($relationValue as $index => $relatedItem) {
+                                                    if ($relatedItem instanceof \Illuminate\Database\Eloquent\Model) {
+                                                        foreach ((array) $relatedItem->getAttributes() as $key => $value) {
+                                                            $replaceMap['{'.$relationName.'.'.$index.'.'.$key.'}'] = $value;
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
