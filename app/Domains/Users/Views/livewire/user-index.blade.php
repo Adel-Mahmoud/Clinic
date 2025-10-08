@@ -16,7 +16,7 @@
                 @endif
             </div>
         </div>
-        <div class="card-header pb-0"> 
+        <div class="card-header pb-0">
             <h4 class="card-title">قائمة المستخدمين</h4>
             @if(count($selected) > 0)
             <div class="text-muted mt-1">تم تحديد {{ count($selected) }} مستخدم</div>
@@ -41,7 +41,7 @@
                     <tbody>
                         @forelse ($users as $user)
                         <tr class="@if(in_array($user->id, $selected)) table-active @endif">
-                            <td>                                
+                            <td>
                                 <input type="checkbox"
                                     wire:model.live="selected"
                                     value="{{ $user->id }}"
@@ -51,8 +51,10 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>
-                                @foreach($user->getRoleNames() as $role)
-                                <span class="badge bg-info">{{ $role }}</span>
+                                @foreach($user->roles as $role)
+                                <a href="{{ route('admin.roles.edit', $role->id) }}" class="badge bg-info text-decoration-none">
+                                    {{ $role->name }}
+                                </a>
                                 @endforeach
                             </td>
                             <td>{{ $user->created_at->format('Y-m-d') }}</td>

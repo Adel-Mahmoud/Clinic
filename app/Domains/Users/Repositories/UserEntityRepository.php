@@ -8,12 +8,12 @@ class UserEntityRepository
 {
     public function all()
     {
-        return Admin::latest()->get();
+        return Admin::with('roles')->latest()->get();
     }
 
     public function find($id)
     {
-        return Admin::findOrFail($id);
+        return Admin::with('roles')->findOrFail($id);
     }
 
     public function create(array $data)
