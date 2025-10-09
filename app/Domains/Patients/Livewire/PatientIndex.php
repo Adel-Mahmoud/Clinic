@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Domains\Permissions\Livewire;
+namespace App\Domains\Patients\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Spatie\Permission\Models\Permission;
+use App\Domains\Patients\Models\PatientEntity;
 
-class PermissionIndex extends Component
+class PatientIndex extends Component
 {
     use WithPagination;
 
@@ -16,18 +16,12 @@ class PermissionIndex extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-    public $page = 'index';
     protected $listeners = [
-        'deleteItem',
-        'deleteSelected',
+        'deleteItem' => 'deleteItem',
+        'deleteSelected' => 'deleteSelected',
         'refreshComponent' => '$refresh',
-        'changePage',
     ];
 
-    public function changePage($page)
-    {
-        $this->page = $page;
-    }
     public function updatingSearch()
     {
         $this->resetPage();
@@ -36,13 +30,11 @@ class PermissionIndex extends Component
     public function deleteItem($id)
     {
         if ($id) {
-            Permission::findOrFail($id)->delete();
-
+            PatientEntity::findOrFail($id)->delete();
             $this->dispatch('swal:success', [
                 'title' => 'تم الحذف!',
-                'text'  => 'تم حذف الصلاحية بنجاح.'
+                'text'  => 'تم حذف البيانات بنجاح.'
             ]);
-
             $this->dispatch('refreshComponent');
         }
     }
@@ -50,7 +42,7 @@ class PermissionIndex extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = Permission::pluck('id')->toArray();
+            $this->selected = PatientEntity::pluck('id')->toArray();
         } else {
             $this->selected = [];
         }
@@ -71,7 +63,7 @@ class PermissionIndex extends Component
         if (empty($this->selected)) {
             $this->dispatch('swal:error', [
                 'title' => 'لم يتم التحديد',
-                'text'  => 'يرجى تحديد صلاحيات للحذف أولاً.'
+                'text'  => 'يرجى تحديد سجلات للحذف أولاً.'
             ]);
             return;
         }
@@ -79,36 +71,42 @@ class PermissionIndex extends Component
         $this->dispatch('swal:confirm', [
             'type'  => 'bulk',
             'title' => 'هل أنت متأكد؟',
-            'text'  => 'سيتم حذف ' . count($this->selected) . ' صلاحية ولا يمكن التراجع!',
+            'text'  => 'سيتم حذف ' . count($this->selected) . ' سجل ولا يمكن التراجع!',
         ]);
     }
 
     public function deleteSelected()
     {
-        if (empty($this->selected)) return;
+        if (empty($this->selected)) {
+            return;
+        }
 
-        Permission::whereIn('id', $this->selected)->delete();
+        PatientEntity::whereIn('id', $this->selected)->delete();
 
         $this->selected = [];
         $this->selectAll = false;
 
         $this->dispatch('swal:success', [
-            'title' => 'تم الحذف!',
-            'text'  => 'تم حذف الصلاحيات المحددة بنجاح.',
+            'title' => 'تم الحذف',
+            'text' => 'تم حذف العناصر المحددة بنجاح',
         ]);
-
         $this->dispatch('refreshComponent');
     }
 
     public function render()
     {
-        $permissions = Permission::when($this->search, function ($query) {
-                $query->where('name', 'like', "%{$this->search}%");
+        $patients = PatientEntity::with('user')
+            ->when($this->search, function ($query) {
+                $query->whereHas('user', function ($q) {
+                    $q->where('name', 'like', "%{$this->search}%")
+                      ->orWhere('email', 'like', "%{$this->search}%");
+                })
+                ->orWhere('phone', 'like', "%{$this->search}%");
             })
             ->paginate(10);
 
-        return view('permissions::livewire.permission-index', compact('permissions'));
+        return view('patients::livewire.patient-index', compact('patients'));
     }
 }
 
-
+ 

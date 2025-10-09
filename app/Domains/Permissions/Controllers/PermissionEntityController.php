@@ -37,15 +37,17 @@ class PermissionEntityController extends Controller
 
     public function store(PermissionRequest $request): RedirectResponse
     {
-        $this->repository->create($request->validated());
+        $data = $request->validated();
+        if (empty($data['guard_name'])) {
+            $data['guard_name'] = 'web';
+        }
+        $this->repository->create($data);
 
-        return redirect()
-            ->route('admin.permissions.index')
-            ->with('swal', [
-                'type'  => 'success',
-                'title' => 'تم الإضافة!',
-                'text'  => 'تمت إضافة الصلاحية بنجاح.',
-            ]);
+        return redirect()->route('admin.permissions.index')->with('swal', [
+            'type'  => 'success',
+            'title' => 'تم الإضافة!',
+            'text'  => 'تمت إضافة الصلاحية بنجاح.',
+        ]);
     }
 
     public function edit($id): View
@@ -53,19 +55,30 @@ class PermissionEntityController extends Controller
         $sectionPage = 'الصلاحيات';
         $titlePage = 'تعديل صلاحية';
         $permission = $this->repository->find($id);
-        return view('permissions::admin.edit', compact('permission', 'sectionPage', 'titlePage'));
+        return view('permissions::admin.edit', compact('sectionPage', 'titlePage', 'permission'));
     }
 
     public function update(PermissionRequest $request, $id): RedirectResponse
     {
-        $this->repository->update($id, $request->validated());
-        return redirect()->route('admin.permissions.index')->with('success', 'تم تعديل الصلاحية بنجاح');
+        $data = $request->validated();
+        $this->repository->update($id, $data);
+
+        return redirect()->route('admin.permissions.index')->with('swal', [
+            'type'  => 'success',
+            'title' => 'تم التحديث!',
+            'text'  => 'تم تعديل الصلاحية بنجاح.',
+        ]);
     }
 
     public function destroy($id): RedirectResponse
     {
         $this->repository->delete($id);
-        return redirect()->route('admin.permissions.index')->with('success', 'تم حذف الصلاحية بنجاح');
+
+        return redirect()->route('admin.permissions.index')->with('swal', [
+            'type'  => 'success',
+            'title' => 'تم الحذف!',
+            'text'  => 'تم حذف الصلاحية بنجاح.',
+        ]);
     }
 }
 

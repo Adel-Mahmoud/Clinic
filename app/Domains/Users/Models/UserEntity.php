@@ -8,8 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class UserEntity extends Authenticatable
 {
     use HasRoles;
-    protected $table = 'admins';
-    protected $guard_name = 'admin';
+    protected $table = 'users';
+    protected $guard_name = 'web';
     protected $fillable = [
         'name',
         'email',
@@ -20,13 +20,4 @@ class UserEntity extends Authenticatable
         'password',
     ];
     
-    public function roles()
-    {
-        return $this->belongsToMany(
-            \Spatie\Permission\Models\Role::class,
-            'model_has_roles',
-            'model_id',
-            'role_id'
-        )->where('model_type', self::class);
-    }
 }
