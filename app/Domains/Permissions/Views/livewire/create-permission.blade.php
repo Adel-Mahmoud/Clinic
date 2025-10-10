@@ -22,7 +22,7 @@
                         <div class="text-center mt-3">
                             <button type="submit" class="btn btn-primary">إضافة الصلاحية</button>
 
-                            <a href="{{ route('admin.permissions.index') }}" class="btn btn-secondary" wire:navigate>
+                            <a href="{{ route('admin.permissions.index') }}" class="btn btn-secondary">
                                 رجوع    
                             </a>
 

@@ -33,7 +33,8 @@ class CreatePermission extends Component
             'text'  => 'تمت إضافة الصلاحية بنجاح.',
         ]);
 
-        return $this->redirectRoute('admin.permissions.index', navigate: true);
+        return redirect()->route('admin.permissions.index');
+        // return $this->redirectRoute('admin.permissions.index', navigate: true);
     }
 
     public function render()

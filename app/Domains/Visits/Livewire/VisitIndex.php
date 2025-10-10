@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Domains\Patients\Livewire;
+namespace App\Domains\Visits\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Domains\Patients\Models\PatientEntity;
+use App\Domains\Visits\Models\VisitEntity;
 
-class PatientIndex extends Component
+class VisitIndex extends Component
 {
     use WithPagination;
 
     public $search = '';
     public $selected = [];
     public $selectAll = false;
+    public $statusFilter = '';
 
     protected $paginationTheme = 'bootstrap';
 
@@ -27,13 +28,18 @@ class PatientIndex extends Component
         $this->resetPage();
     }
 
+    public function updatingStatusFilter()
+    {
+        $this->resetPage();
+    }
+
     public function deleteItem($id)
     {
         if ($id) {
-            PatientEntity::findOrFail($id)->delete();
+            VisitEntity::findOrFail($id)->delete();
             $this->dispatch('swal:success', [
                 'title' => 'تم الحذف!',
-                'text'  => 'تم حذف البيانات بنجاح.'
+                'text'  => 'تم حذف الزيارة بنجاح.'
             ]);
             $this->dispatch('refreshComponent');
         }
@@ -42,7 +48,7 @@ class PatientIndex extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = PatientEntity::pluck('id')->toArray();
+            $this->selected = VisitEntity::pluck('id')->toArray();
         } else {
             $this->selected = [];
         }
@@ -53,7 +59,7 @@ class PatientIndex extends Component
         $this->dispatch('swal:confirm', [
             'id'    => $id,
             'title' => 'هل أنت متأكد؟',
-            'text'  => 'لن يمكنك التراجع بعد الحذف!',
+            'text'  => 'لن يمكنك التراجع بعد حذف الزيارة!',
             'type'  => 'single'
         ]);
     }
@@ -63,7 +69,7 @@ class PatientIndex extends Component
         if (empty($this->selected)) {
             $this->dispatch('swal:error', [
                 'title' => 'لم يتم التحديد',
-                'text'  => 'يرجى تحديد سجلات للحذف أولاً.'
+                'text'  => 'يرجى تحديد زيارات للحذف أولاً.'
             ]);
             return;
         }
@@ -71,7 +77,7 @@ class PatientIndex extends Component
         $this->dispatch('swal:confirm', [
             'type'  => 'bulk',
             'title' => 'هل أنت متأكد؟',
-            'text'  => 'سيتم حذف ' . count($this->selected) . ' سجل ولا يمكن التراجع!',
+            'text'  => 'سيتم حذف ' . count($this->selected) . ' زيارة ولا يمكن التراجع!',
         ]);
     }
 
@@ -81,36 +87,37 @@ class PatientIndex extends Component
             return;
         }
 
-        PatientEntity::whereIn('id', $this->selected)->delete();
+        VisitEntity::whereIn('id', $this->selected)->delete();
 
         $this->selected = [];
         $this->selectAll = false;
 
         $this->dispatch('swal:success', [
             'title' => 'تم الحذف',
-            'text' => 'تم حذف العناصر المحددة بنجاح',
+            'text' => 'تم حذف الزيارات المحددة بنجاح',
         ]);
         $this->dispatch('refreshComponent');
     }
 
     public function render()
     {
-        $patients = PatientEntity::with('user')
+        $visits = VisitEntity::with(['patient.user', 'service'])
             ->when($this->search, function ($query) {
-                $query->whereHas('user', function ($q) {
-                    $q->where('name', 'like', "%{$this->search}%")
-                      ->orWhere('email', 'like', "%{$this->search}%");
+                $query->whereHas('patient.user', function ($q) {
+                    $q->where('name', 'like', "%{$this->search}%");
                 })
-                ->orWhere('phone', 'like', "%{$this->search}%")
-                ->orWhere('national_id', 'like', "%{$this->search}%")
-                ->orWhere('general_health_status', 'like', "%{$this->search}%")
-                ->orWhere('drug_allergy', 'like', "%{$this->search}%")
+                ->orWhereHas('service', function ($q) {
+                    $q->where('name', 'like', "%{$this->search}%");
+                })
                 ->orWhere('notes', 'like', "%{$this->search}%");
             })
+            ->when($this->statusFilter, function ($query) {
+                $query->where('status', $this->statusFilter);
+            })
+            ->orderBy('visit_date', 'desc')
+            ->orderBy('visit_time', 'desc')
             ->paginate(10);
 
-        return view('patients::livewire.patient-index', compact('patients'));
+        return view('visits::livewire.visit-index', compact('visits'));
     }
 }
-
- 

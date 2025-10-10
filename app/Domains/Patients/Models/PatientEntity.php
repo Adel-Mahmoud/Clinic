@@ -16,6 +16,9 @@ class PatientEntity extends Model
         'birth_date',
         'address',
         'national_id',
+        'general_health_status',
+        'drug_allergy',
+        'notes',
         'created_by',
     ];
 

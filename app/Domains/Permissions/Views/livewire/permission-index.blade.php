@@ -13,7 +13,7 @@
                 @endcan
                 @else
                 @can('create permission')
-                <a href="{{ route('admin.permissions.create') }}" wire:navigate class="btn btn-primary">
+                <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> إضافة صلاحية جديدة
                 </a>
                 @endcan
@@ -54,7 +54,7 @@
                             <td>{{ $permission->created_at->format('Y-m-d') }}</td>
                             <td>
                                 @can('edit permission')
-                                <a href="{{ route('admin.permissions.edit', $permission->id) }}" wire:navigate class="btn btn-sm btn-warning">
+                                <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 @endcan

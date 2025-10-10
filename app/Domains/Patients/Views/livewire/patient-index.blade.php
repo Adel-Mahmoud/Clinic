@@ -2,7 +2,7 @@
     <div class="card">
         <div class="m-3 row g-3 align-items-center">
             <div class="col-12 col-md-4">
-                <input type="text" class="form-control" placeholder="بحث بالاسم أو البريد أو الهاتف" wire:model.live.500ms="search">
+                <input type="text" class="form-control" placeholder="بحث بالاسم، البريد، الهاتف، الهوية، الحالة الصحية، الحساسية، أو الملاحظات" wire:model.live.500ms="search">
             </div>
             <div class="col-12 col-md-8 text-md-end text-left">
                 @if(count($selected) > 0)
@@ -32,9 +32,10 @@
                             </th>
                             <th>#</th>
                             <th>الاسم</th>
-                            <th>البريد الإلكتروني</th>
+                            <th>العنوان</th>
                             <th>الهاتف</th>
-                            <th>الهوية</th>
+                            <th>الجنس</th>
+                            <th>العمر</th>
                             <th>تاريخ الإنشاء</th>
                             <th width="150">الإجراءات</th>
                         </tr>
@@ -50,11 +51,29 @@
                             </td>
                             <td>{{ $loop->iteration + ($patients->currentPage() - 1) * $patients->perPage() }}</td>
                             <td>{{ optional($patient->user)->name }}</td>
-                            <td>{{ optional($patient->user)->email }}</td>
+                            <td>{{ $patient->address }}</td>
                             <td>{{ $patient->phone }}</td>
-                            <td>{{ $patient->national_id }}</td>
+                            <td>
+                                @if($patient->gender == 'male')
+                                <span class="badge bg-primary text-light">ذكر</span>
+                                @elseif($patient->gender == 'female')
+                                <span class="badge bg-pink text-light">أنثى</span>
+                                @else
+                                <span class="text-muted text-light">غير محدد</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($patient->birth_date)
+                                {{ \Carbon\Carbon::parse($patient->birth_date)->age }} سنة
+                                @else
+                                <span class="text-muted">غير محدد</span>
+                                @endif
+                            </td>
                             <td>{{ $patient->created_at?->format('Y-m-d') }}</td>
                             <td>
+                                <a href="{{ route('admin.visits.show', $patient->id) }}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-calendar-plus"></i> 
+                                </a>
                                 <a href="{{ route('admin.patients.edit', $patient->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -67,6 +86,8 @@
                         @empty
                         <tr>
                             <td colspan="8" class="text-center py-4">
+                                <i class="fas fa-user-injured fa-2x text-muted mb-2"></i>
+                                <br>
                                 لا يوجد مرضى
                             </td>
                         </tr>
@@ -80,5 +101,3 @@
         </div>
     </div>
 </div>
-
- 

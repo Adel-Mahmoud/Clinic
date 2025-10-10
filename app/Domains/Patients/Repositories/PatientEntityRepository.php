@@ -11,7 +11,7 @@ class PatientEntityRepository
 {
     public function all()
     {
-        return PatientEntity::all();
+        return PatientEntity::with('user')->get();
     }
 
     public function find($id)
@@ -28,16 +28,16 @@ class PatientEntityRepository
     {
         return PatientEntity::create($data);
     }
-
+    
     public function createWithUser(array $data)
     {
         return DB::transaction(function () use ($data) {
             $user = UserEntity::create([
                 'name' => $data['user_name'],
-                'email' => $data['user_email'],
-                'password' => Hash::make($data['user_password']),
+                'email' => $data['user_email'] ?? ('temp_' . uniqid('', true) . '@example.com'),
+                'password' => Hash::make($data['user_password'] ?? '00000000'),
             ]);
-
+            
             return PatientEntity::create([
                 'user_id' => $user->id,
                 'phone' => $data['phone'] ?? null,
@@ -45,7 +45,10 @@ class PatientEntityRepository
                 'birth_date' => $data['birth_date'] ?? null,
                 'address' => $data['address'] ?? null,
                 'national_id' => $data['national_id'] ?? null,
-                'created_by' => auth('admin')->id(),
+                'general_health_status' => $data['general_health_status'] ?? null,
+                'drug_allergy' => $data['drug_allergy'] ?? null,
+                'notes' => $data['notes'] ?? null,
+                'created_by' => auth('admin')->check() ? auth('admin')->id() : null,
             ]);
         });
     }
@@ -65,27 +68,36 @@ class PatientEntityRepository
 
             if ($user) {
                 $user->name = $data['user_name'];
-                $user->email = $data['user_email'];
+                $user->email = $data['user_email'] ?? $user->email;
                 if (!empty($data['user_password'])) {
                     $user->password = Hash::make($data['user_password']);
                 }
                 $user->save();
             }
-
+            
             $patient->update([
                 'phone' => $data['phone'] ?? null,
                 'gender' => $data['gender'] ?? null,
                 'birth_date' => $data['birth_date'] ?? null,
                 'address' => $data['address'] ?? null,
                 'national_id' => $data['national_id'] ?? null,
+                'general_health_status' => $data['general_health_status'] ?? null,
+                'drug_allergy' => $data['drug_allergy'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
-
+ 
             return $patient;
         });
     }
 
     public function delete($id)
     {
-        return PatientEntity::destroy($id);
+        return DB::transaction(function () use ($id) {
+            $patient = PatientEntity::findOrFail($id);
+            $user = $patient->user;
+            $patient->delete();
+            if ($user) $user->delete();
+            return true;
+        });
     }
 }

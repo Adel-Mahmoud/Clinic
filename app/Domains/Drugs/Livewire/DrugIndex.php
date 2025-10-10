@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Domains\Patients\Livewire;
+namespace App\Domains\Drugs\Livewire;
 
 use Livewire\Component;
+use App\Domains\Drugs\Models\DrugEntity;
 use Livewire\WithPagination;
-use App\Domains\Patients\Models\PatientEntity;
 
-class PatientIndex extends Component
+class DrugIndex extends Component
 {
     use WithPagination;
 
@@ -30,7 +30,7 @@ class PatientIndex extends Component
     public function deleteItem($id)
     {
         if ($id) {
-            PatientEntity::findOrFail($id)->delete();
+            DrugEntity::findOrFail($id)->delete();
             $this->dispatch('swal:success', [
                 'title' => 'تم الحذف!',
                 'text'  => 'تم حذف البيانات بنجاح.'
@@ -42,7 +42,7 @@ class PatientIndex extends Component
     public function updatedSelectAll($value)
     {
         if ($value) {
-            $this->selected = PatientEntity::pluck('id')->toArray();
+            $this->selected = DrugEntity::pluck('id')->toArray();
         } else {
             $this->selected = [];
         }
@@ -71,7 +71,7 @@ class PatientIndex extends Component
         $this->dispatch('swal:confirm', [
             'type'  => 'bulk',
             'title' => 'هل أنت متأكد؟',
-            'text'  => 'سيتم حذف ' . count($this->selected) . ' سجل ولا يمكن التراجع!',
+            'text'  => 'سيتم حذف ' . count($this->selected) . ' دواء ولا يمكن التراجع!',
         ]);
     }
 
@@ -81,7 +81,7 @@ class PatientIndex extends Component
             return;
         }
 
-        PatientEntity::whereIn('id', $this->selected)->delete();
+        DrugEntity::whereIn('id', $this->selected)->delete();
 
         $this->selected = [];
         $this->selectAll = false;
@@ -95,22 +95,14 @@ class PatientIndex extends Component
 
     public function render()
     {
-        $patients = PatientEntity::with('user')
+        $drugs = DrugEntity::query()
             ->when($this->search, function ($query) {
-                $query->whereHas('user', function ($q) {
-                    $q->where('name', 'like', "%{$this->search}%")
-                      ->orWhere('email', 'like', "%{$this->search}%");
-                })
-                ->orWhere('phone', 'like', "%{$this->search}%")
-                ->orWhere('national_id', 'like', "%{$this->search}%")
-                ->orWhere('general_health_status', 'like', "%{$this->search}%")
-                ->orWhere('drug_allergy', 'like', "%{$this->search}%")
-                ->orWhere('notes', 'like', "%{$this->search}%");
+                $query->where('name', 'like', "%{$this->search}%")
+                    ->orWhere('generic_name', 'like', "%{$this->search}%")
+                    ->orWhere('manufacturer', 'like', "%{$this->search}%");
             })
             ->paginate(10);
 
-        return view('patients::livewire.patient-index', compact('patients'));
+        return view('drugs::livewire.drug-index', compact('drugs'));
     }
 }
-
- 
