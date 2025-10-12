@@ -71,7 +71,7 @@
                             </td>
                             <td>{{ $patient->created_at?->format('Y-m-d') }}</td>
                             <td>
-                                <a href="{{ route('admin.visits.show', $patient->id) }}" class="btn btn-sm btn-success">
+                                <a href="{{ route('admin.visits.create.with.patient', $patient->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-calendar-plus"></i> 
                                 </a>
                                 <a href="{{ route('admin.patients.edit', $patient->id) }}" class="btn btn-sm btn-warning">

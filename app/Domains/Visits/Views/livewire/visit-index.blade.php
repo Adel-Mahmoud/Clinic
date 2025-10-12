@@ -65,7 +65,9 @@
                             <td>{{ $visit->formatted_price }}</td>
                             <td>
                                 @if($visit->status == 'pending')
-                                <span class="badge bg-warning text-dark">معلق</span>
+                                <span class="badge bg-warning text-dark">معلق
+                                و رقم دوره {{ $visit->queue_position }}
+                                </span>
                                 @elseif($visit->status == 'completed')
                                 <span class="badge bg-success text-light">مكتمل</span>
                                 @elseif($visit->status == 'canceled')

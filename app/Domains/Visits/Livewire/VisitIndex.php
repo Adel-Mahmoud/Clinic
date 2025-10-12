@@ -106,16 +106,16 @@ class VisitIndex extends Component
                 $query->whereHas('patient.user', function ($q) {
                     $q->where('name', 'like', "%{$this->search}%");
                 })
-                ->orWhereHas('service', function ($q) {
-                    $q->where('name', 'like', "%{$this->search}%");
-                })
-                ->orWhere('notes', 'like', "%{$this->search}%");
+                    ->orWhereHas('service', function ($q) {
+                        $q->where('name', 'like', "%{$this->search}%");
+                    })
+                    ->orWhere('notes', 'like', "%{$this->search}%");
             })
             ->when($this->statusFilter, function ($query) {
                 $query->where('status', $this->statusFilter);
             })
             ->orderBy('visit_date', 'desc')
-            ->orderBy('visit_time', 'desc')
+            ->orderBy('visit_time', 'asc')
             ->paginate(10);
 
         return view('visits::livewire.visit-index', compact('visits'));

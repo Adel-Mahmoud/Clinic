@@ -107,6 +107,7 @@ class PatientIndex extends Component
                 ->orWhere('drug_allergy', 'like', "%{$this->search}%")
                 ->orWhere('notes', 'like', "%{$this->search}%");
             })
+            ->latest()
             ->paginate(10);
 
         return view('patients::livewire.patient-index', compact('patients'));

@@ -4,6 +4,7 @@ namespace App\Domains\Visits\Repositories;
 
 use App\Domains\Visits\Models\VisitEntity;
 use Illuminate\Support\Facades\DB;
+use App\Domains\Services\Models\ServiceEntity;
 
 class VisitEntityRepository
 {
@@ -24,12 +25,14 @@ class VisitEntityRepository
 
     public function create(array $data)
     {
+        $data['price'] = ServiceEntity::findOrFail($data['service_id'])->price;
         return VisitEntity::create($data);
     }
 
     public function update($id, array $data)
     {
         $model = VisitEntity::findOrFail($id);
+        $data['price'] = ServiceEntity::findOrFail($data['service_id'])->price;
         $model->update($data);
         return $model;
     }

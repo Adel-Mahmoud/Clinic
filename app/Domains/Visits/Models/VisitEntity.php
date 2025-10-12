@@ -37,7 +37,7 @@ class VisitEntity extends Model
 
     public function getStatusBadgeAttribute()
     {
-        return match($this->status) {
+        return match ($this->status) {
             'pending' => '<span class="badge badge-warning">معلق</span>',
             'completed' => '<span class="badge badge-success">مكتمل</span>',
             'canceled' => '<span class="badge badge-danger">ملغي</span>',
@@ -47,6 +47,24 @@ class VisitEntity extends Model
 
     public function getFormattedPriceAttribute()
     {
-        return number_format($this->price, 2) . ' ريال';
+        return number_format($this->price, 2) . ' ج.م';
+    }
+
+    public function getQueuePositionAttribute()
+    {
+        if ($this->status !== 'pending') {
+            return null;
+        }
+
+        return VisitEntity::where('status', 'pending')
+            ->where('visit_date', $this->visit_date)
+            ->where(function ($q) {
+                $q->where('visit_time', '<', $this->visit_time)
+                    ->orWhere(function ($q2) {
+                        $q2->where('visit_time', $this->visit_time)
+                            ->where('id', '<', $this->id);
+                    });
+            })
+            ->count() + 1;
     }
 }

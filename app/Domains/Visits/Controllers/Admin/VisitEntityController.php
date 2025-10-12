@@ -23,11 +23,11 @@ class VisitEntityController extends Controller
         return view('visits::admin.index', compact('titlePage'));
     }
 
-    public function create(): View
+    public function create($id = null): View
     {
         $sectionPage = 'الزيارات';
         $titlePage = 'زيارة جديدة';
-        return view('visits::admin.create', compact('sectionPage', 'titlePage'));
+        return view('visits::admin.create', compact('sectionPage', 'titlePage', 'id'));
     }
 
     public function store(VisitRequest $request): RedirectResponse
@@ -41,13 +41,6 @@ class VisitEntityController extends Controller
                 'title' => 'تم الإضافة!',
                 'text'  => 'تمت إضافة الزيارة بنجاح.',
             ]);
-    }
-
-    public function show($id): View
-    {
-        $sectionPage = 'الزيارات';
-        $titlePage = 'زيارة جديدة';
-        return view('visits::admin.show', compact('sectionPage', 'titlePage','id'));
     }
 
     public function edit($id): View

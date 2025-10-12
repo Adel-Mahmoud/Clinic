@@ -2,5 +2,5 @@
 <x-page-header :sectionPage="$sectionPage" :titlePage="$titlePage" />
 
 @section('content')
-<livewire:visits.visit-create />
+<livewire:visits.visit-create :patientId="$id"/>
 @endsection

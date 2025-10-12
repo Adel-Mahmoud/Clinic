@@ -3,10 +3,11 @@
 namespace App\Domains\Visits\Livewire;
 
 use Livewire\Component;
-use App\Domains\Visits\Models\VisitEntity;
 use App\Domains\Visits\Repositories\VisitEntityRepository;
+use App\Domains\Visits\Requests\VisitRequest;
 use App\Domains\Patients\Models\PatientEntity;
 use App\Domains\Services\Models\ServiceEntity;
+use Illuminate\Support\Facades\Validator;
 
 class VisitCreate extends Component
 {
@@ -18,59 +19,85 @@ class VisitCreate extends Component
     public $status = 'pending';
     public $notes = '';
 
-    protected $rules = [
-        'patient_id' => 'required|integer|exists:patients,id',
-        'service_id' => 'required|integer|exists:services,id',
-        'visit_date' => 'required|date|after_or_equal:today',
-        'visit_time' => 'required|date_format:H:i',
-        'price' => 'required|numeric|min:0',
-        'status' => 'required|in:pending,completed,canceled',
-        'notes' => 'nullable|string|max:1000',
-    ];
+    public $search = '';
+    public $patients = [];
+    public $showDropdown = false;
 
-    protected $messages = [
-        'patient_id.required' => 'يجب اختيار المريض',
-        'patient_id.exists' => 'المريض المحدد غير موجود',
-        'service_id.required' => 'يجب اختيار الخدمة',
-        'service_id.exists' => 'الخدمة المحددة غير موجودة',
-        'visit_date.required' => 'يجب تحديد تاريخ الزيارة',
-        'visit_date.after_or_equal' => 'تاريخ الزيارة يجب أن يكون اليوم أو بعده',
-        'visit_time.required' => 'يجب تحديد وقت الزيارة',
-        'visit_time.date_format' => 'تنسيق الوقت غير صحيح',
-        'price.required' => 'يجب تحديد السعر',
-        'price.numeric' => 'السعر يجب أن يكون رقماً',
-        'price.min' => 'السعر يجب أن يكون أكبر من أو يساوي صفر',
-        'status.required' => 'يجب تحديد حالة الزيارة',
-        'status.in' => 'حالة الزيارة غير صحيحة',
-        'notes.max' => 'الملاحظات يجب أن تكون أقل من 1000 حرف',
-    ];
+    protected $listeners = ['setPriceFromService' => 'updatePrice'];
 
-    public function mount()
+    public function mount($patientId = null)
     {
         $this->visit_date = now()->format('Y-m-d');
         $this->visit_time = now()->format('H:i');
+
+        if ($patientId) {
+            $patient = PatientEntity::with('user')->find($patientId);
+            if ($patient) {
+                $this->patient_id = $patientId;
+                $this->search = $patient->user->name;
+                $this->showDropdown = false;
+            }
+        }
     }
 
-    public function updated($propertyName)
+    public function updatedSearch()
     {
-        $this->validateOnly($propertyName);
+        if (strlen($this->search) >= 2) {
+            $this->patients = PatientEntity::with('user')
+                ->whereHas('user', function ($query) {
+                    $query->where('name', 'like', '%' . $this->search . '%')
+                        ->orWhere('phone', 'like', '%' . $this->search . '%')
+                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                })
+                ->take(10)
+                ->get();
+
+            $this->showDropdown = true;
+        } else {
+            $this->patients = [];
+            $this->showDropdown = false;
+        }
+    }
+
+    public function selectPatient($id)
+    {
+        $patient = PatientEntity::with('user')->find($id);
+        if ($patient) {
+            $this->patient_id = $id;
+            $this->search = $patient->user->name;
+            $this->patients = [];
+            $this->showDropdown = false;
+        }
+    }
+
+    public function clearPatient()
+    {
+        $this->patient_id = '';
+        $this->search = '';
+        $this->patients = [];
+        $this->showDropdown = false;
+    }
+
+    public function updatePrice($price)
+    {
+        $this->price = $price;
     }
 
     public function save()
     {
-        $this->validate();
+        $validator = Validator::make($this->getData(), (new VisitRequest())->rules(), (new VisitRequest())->messages());
+
+        if ($validator->fails()) {
+            $this->dispatch('swal:error', [
+                'title' => 'خطأ في التحقق',
+                'text' => implode("\n", $validator->errors()->all())
+            ]);
+            return;
+        }
 
         try {
-            $visitRepository = new VisitEntityRepository();
-            $visitRepository->create([
-                'patient_id' => $this->patient_id,
-                'service_id' => $this->service_id,
-                'visit_date' => $this->visit_date,
-                'visit_time' => $this->visit_time,
-                'price' => $this->price,
-                'status' => $this->status,
-                'notes' => $this->notes,
-            ]);
+            $repo = new VisitEntityRepository();
+            $repo->create($this->getData());
 
             $this->dispatch('swal:success', [
                 'title' => 'تم الحفظ!',
@@ -81,16 +108,28 @@ class VisitCreate extends Component
         } catch (\Exception $e) {
             $this->dispatch('swal:error', [
                 'title' => 'خطأ!',
-                'text' => 'حدث خطأ أثناء حفظ البيانات: ' . $e->getMessage()
+                'text' => 'حدث خطأ أثناء الحفظ: ' . $e->getMessage()
             ]);
         }
     }
 
+    private function getData()
+    {
+        return [
+            'patient_id' => $this->patient_id,
+            'service_id' => $this->service_id,
+            'visit_date' => $this->visit_date,
+            'visit_time' => $this->visit_time,
+            'price' => $this->price,
+            'status' => $this->status,
+            'notes' => $this->notes,
+        ];
+    }
+
     public function render()
     {
-        $patients = PatientEntity::with('user')->get();
         $services = ServiceEntity::all();
 
-        return view('visits::livewire.visit-create', compact('patients', 'services'));
+        return view('visits::livewire.visit-create', compact('services'));
     }
 }

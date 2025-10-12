@@ -3,14 +3,16 @@
 namespace App\Domains\Visits\Livewire;
 
 use Livewire\Component;
-use App\Domains\Visits\Models\VisitEntity;
 use App\Domains\Visits\Repositories\VisitEntityRepository;
+use App\Domains\Visits\Requests\VisitRequest;
 use App\Domains\Patients\Models\PatientEntity;
 use App\Domains\Services\Models\ServiceEntity;
+use Illuminate\Support\Facades\Validator;
 
 class VisitEdit extends Component
 {
-    public $visit;
+    public $visit_id;
+    public $patient_name = '';
     public $patient_id = '';
     public $service_id = '';
     public $visit_date = '';
@@ -19,65 +21,44 @@ class VisitEdit extends Component
     public $status = 'pending';
     public $notes = '';
 
-    protected $rules = [
-        'patient_id' => 'required|integer|exists:patients,id',
-        'service_id' => 'required|integer|exists:services,id',
-        'visit_date' => 'required|date',
-        'visit_time' => 'required|date_format:H:i',
-        'price' => 'required|numeric|min:0',
-        'status' => 'required|in:pending,completed,canceled',
-        'notes' => 'nullable|string|max:1000',
-    ];
-
-    protected $messages = [
-        'patient_id.required' => 'يجب اختيار المريض',
-        'patient_id.exists' => 'المريض المحدد غير موجود',
-        'service_id.required' => 'يجب اختيار الخدمة',
-        'service_id.exists' => 'الخدمة المحددة غير موجودة',
-        'visit_date.required' => 'يجب تحديد تاريخ الزيارة',
-        'visit_time.required' => 'يجب تحديد وقت الزيارة',
-        'visit_time.date_format' => 'تنسيق الوقت غير صحيح',
-        'price.required' => 'يجب تحديد السعر',
-        'price.numeric' => 'السعر يجب أن يكون رقماً',
-        'price.min' => 'السعر يجب أن يكون أكبر من أو يساوي صفر',
-        'status.required' => 'يجب تحديد حالة الزيارة',
-        'status.in' => 'حالة الزيارة غير صحيحة',
-        'notes.max' => 'الملاحظات يجب أن تكون أقل من 1000 حرف',
-    ];
+    protected $listeners = ['setPriceFromService' => 'updatePrice'];
 
     public function mount($visitId)
     {
-        $this->visit = VisitEntity::with(['patient.user', 'service'])->findOrFail($visitId);
-        
-        $this->patient_id = $this->visit->patient_id;
-        $this->service_id = $this->visit->service_id;
-        $this->visit_date = $this->visit->visit_date->format('Y-m-d');
-        $this->visit_time = $this->visit->visit_time->format('H:i');
-        $this->price = $this->visit->price;
-        $this->status = $this->visit->status;
-        $this->notes = $this->visit->notes;
+        $repo = new VisitEntityRepository();
+        $visit = $repo->findOrFailWithRelations($visitId);
+
+        $this->patient_name = $visit->patient->user->name;
+        $this->visit_id = $visit->id;
+        $this->patient_id = $visit->patient_id;
+        $this->service_id = $visit->service_id;
+        $this->visit_date = $visit->visit_date->format('Y-m-d');
+        $this->visit_time = $visit->visit_time->format('H:i');
+        $this->price = $visit->price;
+        $this->status = $visit->status;
+        $this->notes = $visit->notes;
     }
 
-    public function updated($propertyName)
+    public function updatePrice($price)
     {
-        $this->validateOnly($propertyName);
+        $this->price = $price;
     }
 
     public function update()
     {
-        $this->validate();
+        $validator = Validator::make($this->getData(), (new VisitRequest())->rules(), (new VisitRequest())->messages());
+
+        if ($validator->fails()) {
+            $this->dispatch('swal:error', [
+                'title' => 'خطأ في التحقق',
+                'text' => implode("\n", $validator->errors()->all())
+            ]);
+            return;
+        }
 
         try {
-            $visitRepository = new VisitEntityRepository();
-            $visitRepository->update($this->visit->id, [
-                'patient_id' => $this->patient_id,
-                'service_id' => $this->service_id,
-                'visit_date' => $this->visit_date,
-                'visit_time' => $this->visit_time,
-                'price' => $this->price,
-                'status' => $this->status,
-                'notes' => $this->notes,
-            ]);
+            $repo = new VisitEntityRepository();
+            $repo->update($this->visit_id, $this->getData());
 
             $this->dispatch('swal:success', [
                 'title' => 'تم التحديث!',
@@ -88,9 +69,22 @@ class VisitEdit extends Component
         } catch (\Exception $e) {
             $this->dispatch('swal:error', [
                 'title' => 'خطأ!',
-                'text' => 'حدث خطأ أثناء تحديث البيانات: ' . $e->getMessage()
+                'text' => 'حدث خطأ أثناء التحديث: ' . $e->getMessage()
             ]);
         }
+    }
+
+    private function getData()
+    {
+        return [
+            'patient_id' => $this->patient_id,
+            'service_id' => $this->service_id,
+            'visit_date' => $this->visit_date,
+            'visit_time' => $this->visit_time,
+            'price' => $this->price,
+            'status' => $this->status,
+            'notes' => $this->notes,
+        ];
     }
 
     public function render()
