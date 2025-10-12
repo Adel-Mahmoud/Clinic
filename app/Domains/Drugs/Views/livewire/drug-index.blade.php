@@ -35,7 +35,6 @@
                             <th>الاسم العلمي</th>
                             <th>الشكل</th>
                             <th>التركيز</th>
-                            <th>الشركة المصنعة</th>
                             <th>الحالة</th>
                             <th>تاريخ الإنشاء</th>
                             <th width="150">الإجراءات</th>
@@ -55,7 +54,6 @@
                             <td>{{ $drug->generic_name ?? '-' }}</td>
                             <td>{{ $drug->form ?? '-' }}</td>
                             <td>{{ $drug->strength ?? '-' }}</td>
-                            <td>{{ $drug->manufacturer ?? '-' }}</td>
                             <td>
                                 @if($drug->is_active)
                                     <span class="badge bg-success">نشط</span>
