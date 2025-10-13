@@ -1,6 +1,10 @@
 @extends('layouts.master',['titlePage'=>$titlePage])
 <x-page-header :sectionPage="$sectionPage" :titlePage="$titlePage" />
 
+@section('css')
+<link href="{{ URL::asset('assets/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ URL::asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
+@endsection
 @section('content')
 <div class="card mt-4">
     <div class="card-header bg-primary text-white">
@@ -11,10 +15,7 @@
             @csrf
             <div class="form-group mb-3">
                 <div class="custom-file">
-                    <input class="custom-file-input" id="customFile" name="file" type="file" accept=".xlsx,.xls,.csv" required> 
-                    <label class="custom-file-label" for="customFile">
-                        اختر ملف Excel
-                    </label>
+                    <input class="dropify" data-height="150" name="file" type="file" accept=".xlsx,.xls,.csv" required>
                     @error('file') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -99,4 +100,14 @@
 
     </div>
 </x-form>
+@endsection
+
+@section('js')
+<script src="{{ URL::asset('assets/plugins/fileuploads/js/fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fileuploads/js/file-upload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
 @endsection
