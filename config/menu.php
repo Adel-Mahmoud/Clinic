@@ -10,6 +10,12 @@ return [
         // 'badge-color'  => 'success',
     ],
     [
+        'label'  => 'الكشف',
+        'type'   => 'link',
+        'icon'   => '<i class="fas fa-stethoscope fa-lg menu-icon"></i>',
+        'url'    => '/admin/examinations',
+    ],
+    [
         'label'  => 'الزيارات',
         'type'   => 'dropdown',
         'icon'   => '<i class="fas fa-calendar-check fa-lg menu-icon"></i>',

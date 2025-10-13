@@ -56,9 +56,9 @@
                             <td>{{ $drug->strength ?? '-' }}</td>
                             <td>
                                 @if($drug->is_active)
-                                    <span class="badge bg-success">نشط</span>
+                                    <span class="badge bg-success text-light">نشط</span>
                                 @else
-                                    <span class="badge bg-danger">غير نشط</span>
+                                    <span class="badge bg-danger text-light">غير نشط</span>
                                 @endif
                             </td>
                             <td>{{ $drug->created_at->format('Y-m-d') }}</td>

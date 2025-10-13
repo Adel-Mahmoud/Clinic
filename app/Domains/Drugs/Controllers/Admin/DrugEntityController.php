@@ -4,6 +4,7 @@ namespace App\Domains\Drugs\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Domains\Drugs\Repositories\DrugEntityRepository;
+use App\Domains\Drugs\Requests\DrugImportRequest;
 use App\Domains\Drugs\Requests\DrugRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -41,6 +42,19 @@ class DrugEntityController extends Controller
                 'type'  => 'success',
                 'title' => 'تم الإضافة!',
                 'text'  => 'تمت إضافة الدواء بنجاح.',
+            ]);
+    }
+
+    public function import(DrugImportRequest $request)
+    {
+        $this->repository->importFromExcel($request->file('file'));
+
+        return redirect()
+            ->route('admin.drugs.index')
+            ->with('swal', [
+                'type' => 'success',
+                'title' => 'تم الاستيراد!',
+                'text' => 'تم استيراد الأدوية بنجاح.',
             ]);
     }
 

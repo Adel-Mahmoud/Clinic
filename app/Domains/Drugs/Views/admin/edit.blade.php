@@ -1,6 +1,7 @@
 @extends('layouts.master',['titlePage'=>$titlePage])
 <x-page-header :sectionPage="$sectionPage" :titlePage="$titlePage" />
 
+
 @section('content')
 <x-form
     :action="route('admin.drugs.update', $drug->id)"
@@ -80,9 +81,39 @@
                 <option value="1" {{ old('is_active', $drug->is_active ? '1' : '0') == '1' ? 'selected' : '' }}>نشط</option>
                 <option value="0" {{ old('is_active', $drug->is_active ? '1' : '0') == '0' ? 'selected' : '' }}>غير نشط</option>
             </select>
+            <!-- <div class="d-flex">
+                <div>
+                    <input type="hidden" name="is_active" id="is_active" value="{{ old('is_active', $drug->is_active ?? 1) }}">
+                    <div class="main-toggle main-toggle-success {{ old('is_active', $drug->is_active ?? 1) ? 'on' : '' }}" id="toggleActive">
+                        <span></span>
+                    </div>
+                </div>
+                <div class="mr-3">
+                    <span id="statusText" class="fw-bold">
+                        {{ old('is_active', $drug->is_active ?? 1) ? 'نشط' : 'غير نشط' }}
+                    </span>
+                </div>
+            </div> -->
             @error('is_active') <span class="text-danger">{{ $message }}</span> @enderror
         </div>
 
     </div>
 </x-form>
 @endsection
+@push('js')
+<script src="{{URL::asset('assets/plugins/select2/js/select2.min.js')}}"></script>
+<script>
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const toggle = document.getElementById('toggleActive');
+    //     const input = document.getElementById('is_active');
+    //     const statusText = document.getElementById('statusText');
+
+    //     toggle.addEventListener('click', function() {
+    //         toggle.classList.toggle('on');
+    //         const isActive = toggle.classList.contains('on');
+    //         input.value = isActive ? 1 : 0;
+    //         statusText.textContent = isActive ? 'نشط' : 'غير نشط';
+    //     });
+    // });
+</script>
+@endpush

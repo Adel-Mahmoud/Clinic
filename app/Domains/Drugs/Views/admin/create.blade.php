@@ -2,6 +2,28 @@
 <x-page-header :sectionPage="$sectionPage" :titlePage="$titlePage" />
 
 @section('content')
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h6 class="mb-0">استيراد الأدوية من ملف Excel</h6>
+    </div>
+    <div class="card-body">
+        <form action="{{ route('admin.drugs.import') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group mb-3">
+                <div class="custom-file">
+                    <input class="custom-file-input" id="customFile" name="file" type="file" accept=".xlsx,.xls,.csv" required> 
+                    <label class="custom-file-label" for="customFile">
+                        اختر ملف Excel
+                    </label>
+                    @error('file') <span class="text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-file-excel"></i> استيراد الآن
+            </button>
+        </form>
+    </div>
+</div>
 <x-form
     :action="route('admin.drugs.store')"
     submitLabel="إضافة دواء جديد"

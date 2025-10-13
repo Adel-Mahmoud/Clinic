@@ -3,9 +3,17 @@
 namespace App\Domains\Drugs\Repositories;
 
 use App\Domains\Drugs\Models\DrugEntity;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Domains\Drugs\Imports\DrugsImport;
 
 class DrugEntityRepository
 {
+    public function importFromExcel($file)
+    {
+        Excel::import(new DrugsImport, $file);
+        return true;
+    }
+
     public function all()
     {
         return DrugEntity::with('creator')->latest()->get();
