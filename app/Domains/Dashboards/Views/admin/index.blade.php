@@ -10,97 +10,105 @@
 @section('content')
 <!-- row -->
 <div class="row row-sm">
-    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-        <div class="card overflow-hidden sales-card bg-primary-gradient">
-            <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                <div class="">
-                    <h6 class="mb-3 tx-12 text-white">TODAY ORDERS</h6>
-                </div>
-                <div class="pb-0 mt-0">
-                    <div class="d-flex">
-                        <div class="">
-                            <h4 class="tx-20 font-weight-bold mb-1 text-white">$5,74.12</h4>
-                            <p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
-                        </div>
-                        <span class="float-right my-auto mr-auto">
-                            <i class="fas fa-arrow-circle-up text-white"></i>
-                            <span class="text-white op-7"> +427</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <span id="compositeline" class="pt-1">5,9,5,6,4,12,18,14,10,15,12,5,8,5,12,5,12,10,16,12</span>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-        <div class="card overflow-hidden sales-card bg-danger-gradient">
-            <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                <div class="">
-                    <h6 class="mb-3 tx-12 text-white">TODAY EARNINGS</h6>
-                </div>
-                <div class="pb-0 mt-0">
-                    <div class="d-flex">
-                        <div class="">
-                            <h4 class="tx-20 font-weight-bold mb-1 text-white">$1,230.17</h4>
-                            <p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
-                        </div>
-                        <span class="float-right my-auto mr-auto">
-                            <i class="fas fa-arrow-circle-down text-white"></i>
-                            <span class="text-white op-7"> -23.09%</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <span id="compositeline2" class="pt-1">3,2,4,6,12,14,8,7,14,16,12,7,8,4,3,2,2,5,6,7</span>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-        <div class="card overflow-hidden sales-card bg-success-gradient">
-            <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                <div class="">
-                    <h6 class="mb-3 tx-12 text-white">TOTAL EARNINGS</h6>
-                </div>
-                <div class="pb-0 mt-0">
-                    <div class="d-flex">
-                        <div class="">
-                            <h4 class="tx-20 font-weight-bold mb-1 text-white">$7,125.70</h4>
-                            <p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
-                        </div>
-                        <span class="float-right my-auto mr-auto">
-                            <i class="fas fa-arrow-circle-up text-white"></i>
-                            <span class="text-white op-7"> 52.09%</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <span id="compositeline3" class="pt-1">5,10,5,20,22,12,15,18,20,15,8,12,22,5,10,12,22,15,16,10</span>
-        </div>
-    </div>
-    <div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-        <div class="card overflow-hidden sales-card bg-warning-gradient">
-            <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-                <div class="">
-                    <h6 class="mb-3 tx-12 text-white">PRODUCT SOLD</h6>
-                </div>
-                <div class="pb-0 mt-0">
-                    <div class="d-flex">
-                        <div class="">
-                            <h4 class="tx-20 font-weight-bold mb-1 text-white">$4,820.50</h4>
-                            <p class="mb-0 tx-12 text-white op-7">Compared to last week</p>
-                        </div>
-                        <span class="float-right my-auto mr-auto">
-                            <i class="fas fa-arrow-circle-down text-white"></i>
-                            <span class="text-white op-7"> -152.3</span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <span id="compositeline4" class="pt-1">5,9,5,6,4,12,18,14,10,15,12,5,8,5,12,5,12,10,16,12</span>
-        </div>
-    </div>
+    <x-stats-card
+        title="المرضى الجدد اليوم"
+        value="{{ $stats['new_patients_today'] }}"
+        bg="bg-primary-gradient"
+        chart-id="compositeline" />
+
+    <x-stats-card
+        title="الحجوزات المؤكدة"
+        value="{{ $stats['confirmed_reservations'] }}"
+        bg="bg-danger-gradient"
+        chart-id="compositeline2" />
+
+    <x-stats-card
+        title="الحجوزات المنتظرة"
+        value="{{ $stats['pending_reservations'] }}"
+        bg="bg-success-gradient"
+        chart-id="compositeline3" />
+
+    <x-stats-card
+        title="إيرادات اليوم"
+        value="{{ number_format($stats['today_revenue'], 2) . ' ج.م' }}"
+        bg="bg-warning-gradient"
+        chart-id="compositeline4" />
+
 </div>
 <!-- row closed -->
 <!-- row -->
+<div class="card mt-4 p-3">
+    <!-- row -->
+    <div class="row row-sm mt-4">
+        <div class="col-lg-8 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">الإيرادات والزيارات خلال الأسبوع</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-wrapper">
+                        <canvas id="chartStacked1" class="h-300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">توزيع الحجوزات</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-wrapper">
+                        <canvas id="chartPie" class="h-300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الإحصائيات الإضافية -->
+    <div class="row row-sm mt-4">
+    <div class="col-lg-6 col-md-12">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">آخر الحجوزات</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>المريض</th>
+                                <th>التاريخ</th>
+                                <th>الحالة</th>
+                                <th>المبلغ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($reservationsDistribution as $visit)
+                            <tr>
+                                <td>{{ $visit->patient->name ?? 'غير محدد' }}</td>
+                                <td>{{ $visit->visit_date->format('Y-m-d') }}</td>
+                                <td>
+                                    <span class="badge badge-{{ $visit->status == 'completed' ? 'success' : ($visit->status == 'pending' ? 'warning' : 'danger') }}">
+                                        {{ $visit->status }}
+                                    </span>
+                                </td>
+                                <td>{{ number_format($visit->price, 2) }} ج.م</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ... -->
+</div>
+    <!-- /row -->
+</div>
+
 <div class="row">
     <div class="text-center">
         <img src="{{ config('settings.brand_image') ? asset('storage/' . config('settings.brand_image')) : URL::asset('assets/img/media/login.png') }}" class="my-auto ht-xl-80p wd-md-100p wd-xl-80p mx-auto" alt="الخلفية">
@@ -110,22 +118,75 @@
 @section('js')
 <!--Internal  Chart.bundle js -->
 <script src="{{URL::asset('assets/plugins/chart.js/Chart.bundle.min.js')}}"></script>
-<!-- Moment js -->
-<script src="{{URL::asset('assets/plugins/raphael/raphael.min.js')}}"></script>
-<!--Internal  Flot js-->
-<script src="{{URL::asset('assets/plugins/jquery.flot/jquery.flot.js')}}"></script>
-<script src="{{URL::asset('assets/plugins/jquery.flot/jquery.flot.pie.js')}}"></script>
-<script src="{{URL::asset('assets/plugins/jquery.flot/jquery.flot.resize.js')}}"></script>
-<script src="{{URL::asset('assets/plugins/jquery.flot/jquery.flot.categories.js')}}"></script>
-<script src="{{URL::asset('assets/js/dashboard.sampledata.js')}}"></script>
-<script src="{{URL::asset('assets/js/chart.flot.sampledata.js')}}"></script>
-<!--Internal Apexchart js-->
-<script src="{{URL::asset('assets/js/apexcharts.js')}}"></script>
-<!-- Internal Map -->
-<script src="{{URL::asset('assets/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
-<script src="{{URL::asset('assets/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
-<script src="{{URL::asset('assets/js/modal-popup.js')}}"></script>
-<!--Internal  index js -->
-<script src="{{URL::asset('assets/js/index.js')}}"></script>
-<script src="{{URL::asset('assets/js/jquery.vmap.sampledata.js')}}"></script>	
+
+<!--Internal  Datepicker js -->
+<script src="{{URL::asset('assets/plugins/jquery-ui/ui/widgets/datepicker.js')}}"></script>
+<!--Internal  Chart.bundle js -->
+<!-- Internal Select2 js-->
+<script src="{{URL::asset('assets/plugins/select2/js/select2.min.js')}}"></script>
+<!--Internal Chartjs js -->
+<script>
+    // charts initialization
+    $(function() {
+        'use strict';
+
+        // Stacked Bar Chart
+        var ctx1 = document.getElementById('chartStacked1').getContext('2d');
+        var chartStacked1 = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
+                datasets: [{
+                    label: 'المرضى الجدد',
+                    data: [65, 59, 80, 81, 56, 55],
+                    backgroundColor: '#007bff'
+                }, {
+                    label: 'الحجوزات المؤكدة',
+                    data: [28, 48, 40, 19, 86, 27],
+                    backgroundColor: '#dc3545'
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        rtl: true
+                    }
+                }
+            }
+        });
+
+        // Pie Chart
+        var ctx2 = document.getElementById('chartPie').getContext('2d');
+        var chartPie = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: ['حجوزات مؤكدة', 'حجوزات منتظرة', 'ملغية'],
+                datasets: [{
+                    data: [60, 25, 15],
+                    backgroundColor: ['#007bff', '#28a745', '#dc3545']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        rtl: true
+                    }
+                }
+            }
+        });
+    });
+</script>
+
 @endsection
