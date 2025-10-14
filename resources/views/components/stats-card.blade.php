@@ -16,7 +16,7 @@
         </div>
         <div class="chart-wrapper">
             <span id="{{ $chartId }}" class="pt-1">
-                {{ is_array($value) ? implode(',', $value) : $value }}
+                {{-- is_array($value) ? implode(',', $value) : $value --}}
             </span>
         </div>
     </div>
