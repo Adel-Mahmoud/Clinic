@@ -36,7 +36,7 @@ return [
     [
         'label'  => 'الخدمات الطبية',
         'type'   => 'dropdown',
-        'icon'   => '<i class="fas fa-stethoscope fa-lg menu-icon"></i>',
+        'icon'   => '<i class="fas fa-notes-medical fa-lg menu-icon"></i>',
         'children' => [
             ['label' => 'عرض الكل', 'url' => '/admin/services'],
             ['label' => 'إضافة جديد', 'url' => '/admin/services/create'],

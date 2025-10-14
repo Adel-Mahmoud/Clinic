@@ -1,11 +1,8 @@
 @extends('layouts.master',['titlePage'=>$titlePage])
-<x-page-header :titlePage="$titlePage" />
 
 @section('css')
 <link href="{{ URL::asset('assets/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ URL::asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-<!--- Internal Sweet-Alert css-->
-<link href="{{URL::asset('assets/plugins/sweet-alert/sweetalert.css')}}" rel="stylesheet">
 @endsection
 
 <x-page-header :titlePage="$titlePage" />
@@ -78,24 +75,4 @@
 <script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
 <script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
 <script src="{{ URL::asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
-<!--Internal  Sweet-Alert js-->
-<script src="{{URL::asset('assets/plugins/sweet-alert/sweetalert.min.js')}}"></script>
-<script src="{{URL::asset('assets/plugins/sweet-alert/jquery.sweet-alert.js')}}"></script>
-<!-- Sweet-alert js  -->
-<script src="{{URL::asset('assets/plugins/sweet-alert/sweetalert.min.js')}}"></script>
-<script src="{{URL::asset('assets/js/sweet-alert.js')}}"></script>
-@if(session('swal'))
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const swalData = @json(session('swal'));
-
-        swal({
-            title: swalData.title || "تمت العملية بنجاح",
-            text: swalData.text || "",
-            icon: swalData.icon || "success",
-            button: "موافق"
-        });
-    });
-</script>
-@endif
 @endsection

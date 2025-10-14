@@ -52,7 +52,7 @@
                             <td>{{ $user->email }}</td>
                             <td>
                                 @foreach($user->roles as $role)
-                                <a href="{{ route('admin.roles.edit', $role->id) }}" class="badge bg-info text-decoration-none">
+                                <a href="{{ route('admin.roles.edit', $role->id) }}" class="badge bg-info text-decoration-none text-light">
                                     {{ $role->name }}
                                 </a>
                                 @endforeach
