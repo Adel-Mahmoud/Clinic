@@ -10,7 +10,7 @@
 @section('content')
 <!-- row -->
 <div class="row row-sm">
-    <x-stats-card
+<x-stats-card
         title="المرضى الجدد اليوم"
         value="{{ $stats['new_patients_today'] }}"
         bg="bg-primary-gradient"
@@ -39,81 +39,38 @@
 <!-- row -->
 <div class="card mt-4 p-3">
     <!-- row -->
-    <div class="row row-sm mt-4">
-        <div class="col-lg-8 col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">الإيرادات والزيارات خلال الأسبوع</h3>
-                </div>
+    <div class="row row-sm">
+        <div class="col-sm-12 col-md-8">
+            <div class="card overflow-hidden">
                 <div class="card-body">
-                    <div class="chart-wrapper">
-                        <canvas id="chartStacked1" class="h-300"></canvas>
+                    <div class="main-content-label mg-b-5">
+                        Stacked Bar Chart
+                    </div>
+                    <p class="mg-b-20">Basic Charts Of Valex template.</p>
+                    <div class="chartjs-wrapper-demo">
+                        <canvas id="chartStacked1"></canvas>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-lg-4 col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">توزيع الحجوزات</h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart-wrapper">
-                        <canvas id="chartPie" class="h-300"></canvas>
-                    </div>
-                </div>
+        </div><!-- col-6 -->
+        <div class="col-sm-12 col-md-4">
+            <div class="main-content-label mg-b-5">
+                Pie Chart
             </div>
-        </div>
+            <p class="mg-b-20">Basic Charts Of Valex template.</p>
+            <div class="chartjs-wrapper-demo">
+                <canvas id="chartPie"></canvas>
+            </div>
+        </div><!-- col-6 -->
     </div>
-
-    <!-- الإحصائيات الإضافية -->
-    <div class="row row-sm mt-4">
-    <div class="col-lg-6 col-md-12">
-        <div class="card card-primary">
-            <div class="card-header">
-                <h3 class="card-title">آخر الحجوزات</h3>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>المريض</th>
-                                <th>التاريخ</th>
-                                <th>الحالة</th>
-                                <th>المبلغ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($reservationsDistribution as $visit)
-                            <tr>
-                                <td>{{ $visit->patient->name ?? 'غير محدد' }}</td>
-                                <td>{{ $visit->visit_date->format('Y-m-d') }}</td>
-                                <td>
-                                    <span class="badge badge-{{ $visit->status == 'completed' ? 'success' : ($visit->status == 'pending' ? 'warning' : 'danger') }}">
-                                        {{ $visit->status }}
-                                    </span>
-                                </td>
-                                <td>{{ number_format($visit->price, 2) }} ج.م</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ... -->
-</div>
     <!-- /row -->
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="text-center">
         <img src="{{ config('settings.brand_image') ? asset('storage/' . config('settings.brand_image')) : URL::asset('assets/img/media/login.png') }}" class="my-auto ht-xl-80p wd-md-100p wd-xl-80p mx-auto" alt="الخلفية">
     </div>
-</div>
+</div> -->
 @endsection
 @section('js')
 <!--Internal  Chart.bundle js -->
