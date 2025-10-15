@@ -3,68 +3,73 @@
 
 @section('css')
 <!--  Owl-carousel css-->
-<link href="{{URL::asset('assets/plugins/owl-carousel/owl.carousel.css')}}" rel="stylesheet" />
-<!-- Maps css -->
-<link href="{{URL::asset('assets/plugins/jqvmap/jqvmap.min.css')}}" rel="stylesheet">
+<!-- <link href="{{URL::asset('assets/plugins/owl-carousel/owl.carousel.css')}}" rel="stylesheet" />
+<link href="{{URL::asset('assets/plugins/jqvmap/jqvmap.min.css')}}" rel="stylesheet"> -->
+
+
+<link href="{{URL::asset('assets/plugins/morris.js/morris.css')}}" rel="stylesheet">
 @endsection
 @section('content')
+
 <!-- row -->
 <div class="row row-sm">
-<x-stats-card
+    <x-stats-card
         title="المرضى الجدد اليوم"
         value="{{ $stats['new_patients_today'] }}"
         bg="bg-primary-gradient"
-        chart-id="compositeline" />
+        icon="fas fa-user-injured" />
 
     <x-stats-card
         title="الحجوزات المؤكدة"
         value="{{ $stats['confirmed_reservations'] }}"
-        bg="bg-danger-gradient"
-        chart-id="compositeline2" />
+        bg="bg-info-gradient"
+        icon="fas fa-calendar-check" />
 
     <x-stats-card
         title="الحجوزات المنتظرة"
         value="{{ $stats['pending_reservations'] }}"
-        bg="bg-success-gradient"
-        chart-id="compositeline3" />
+        bg="bg-warning-gradient"
+        icon="fe fe-pie-chart" />
 
     <x-stats-card
         title="إيرادات اليوم"
         value="{{ number_format($stats['today_revenue'], 2) . ' ج.م' }}"
-        bg="bg-warning-gradient"
-        chart-id="compositeline4" />
+        bg="bg-success-gradient"
+        icon="fe fe-dollar-sign" />
 
 </div>
 <!-- row closed -->
 <!-- row -->
-<div class="card mt-4 p-3">
-    <!-- row -->
-    <div class="row row-sm">
-        <div class="col-sm-12 col-md-8">
-            <div class="card overflow-hidden">
-                <div class="card-body">
-                    <div class="main-content-label mg-b-5">
-                        Stacked Bar Chart
-                    </div>
-                    <p class="mg-b-20">Basic Charts Of Valex template.</p>
-                    <div class="chartjs-wrapper-demo">
-                        <canvas id="chartStacked1"></canvas>
+<div class="row row-sm">
+    <div class="col-md-8">
+        <div class="card mg-b-20">
+            <div class="card-body">
+                <div class="main-content-label mg-b-5">الإيرادات الأسبوعية</div>
+                <p class="mg-b-20">إحصائيات الإيرادات والزيارات خلال الأيام السبعة الماضية</p>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="ht-200 ht-sm-300" id="flotBar1"></div>
                     </div>
                 </div>
             </div>
-        </div><!-- col-6 -->
-        <div class="col-sm-12 col-md-4">
-            <div class="main-content-label mg-b-5">
-                Pie Chart
-            </div>
-            <p class="mg-b-20">Basic Charts Of Valex template.</p>
-            <div class="chartjs-wrapper-demo">
-                <canvas id="chartPie"></canvas>
-            </div>
-        </div><!-- col-6 -->
+        </div>
     </div>
-    <!-- /row -->
+
+    <div class="col-md-4">
+        <div class="card mg-b-20 mg-md-b-0">
+            <div class="card-body">
+                <div class="main-content-label mg-b-5">توزيع الحجوزات</div>
+                <p class="mg-b-20">نسبة الحجوزات حسب الحالة</p>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="ht-200 ht-sm-300" id="flotPie1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<!-- row closed -->
 
 <!-- <div class="row">
     <div class="text-center">
@@ -73,77 +78,168 @@
 </div> -->
 @endsection
 @section('js')
-<!--Internal  Chart.bundle js -->
-<script src="{{URL::asset('assets/plugins/chart.js/Chart.bundle.min.js')}}"></script>
-
-<!--Internal  Datepicker js -->
-<script src="{{URL::asset('assets/plugins/jquery-ui/ui/widgets/datepicker.js')}}"></script>
-<!--Internal  Chart.bundle js -->
-<!-- Internal Select2 js-->
-<script src="{{URL::asset('assets/plugins/select2/js/select2.min.js')}}"></script>
+<!-- Internal Flot js -->
+<script src="{{URL::asset('assets/plugins/jquery.flot/jquery.flot.js')}}"></script>
+<script src="{{URL::asset('assets/plugins/jquery.flot/jquery.flot.pie.js')}}"></script>
+<!-- Internal Chart flot js -->
+<!-- <script src="{{URL::asset('assets/js/chart.flot.js')}}"></script> -->
 <!--Internal Chartjs js -->
-<script>
-    // charts initialization
-    $(function() {
-        'use strict';
 
-        // Stacked Bar Chart
-        var ctx1 = document.getElementById('chartStacked1').getContext('2d');
-        var chartStacked1 = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
-                datasets: [{
-                    label: 'المرضى الجدد',
-                    data: [65, 59, 80, 81, 56, 55],
-                    backgroundColor: '#007bff'
-                }, {
-                    label: 'الحجوزات المؤكدة',
-                    data: [28, 48, 40, 19, 86, 27],
-                    backgroundColor: '#dc3545'
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        stacked: true
-                    },
-                    y: {
-                        stacked: true
-                    }
-                },
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        rtl: true
-                    }
+<script>
+    $(function() {
+        const salesChartData = @json($chartData);
+        const reservationsData = @json($reservationsDistribution);
+
+        const barLabels = salesChartData.map(item => item.date);
+        const barRevenue = salesChartData.map(item => Number(item.total_revenue) || 0);
+        const barVisits = salesChartData.map(item => Number(item.visits_count) || 0);
+
+        const plot = $.plot("#flotBar1", [], {
+            grid: {
+                borderWidth: 1,
+                borderColor: "rgba(171,167,167,0.2)",
+                hoverable: true,
+                backgroundColor: {
+                    colors: ["#ffffff", "#f8f9fa"]
                 }
+            },
+            legend: {
+                show: true,
+                backgroundOpacity: 0
+            },
+            xaxis: {
+                ticks: barLabels.map((label, i) => [i, label]),
+                color: "rgba(171,167,167,0.2)"
+            },
+            yaxes: [{
+                    position: 'left',
+                    min: 0,
+                    color: "rgba(171,167,167,0.2)"
+                },
+                {
+                    position: 'right',
+                    min: 0,
+                    color: "rgba(171,167,167,0.2)"
+                }
+            ]
+        });
+
+        let step = 0;
+        const steps = 40;
+
+        function animateBars() {
+            const currentRevenue = barRevenue.map(y => (y / steps) * step);
+            const currentVisits = barVisits.map(y => (y / steps) * step);
+
+            const data = [{
+                    data: currentRevenue.map((y, i) => [i - 0.15, y]),
+                    bars: {
+                        show: true,
+                        barWidth: 0.3,
+                        align: "center",
+                        fillColor: "#00c9a7"
+                    },
+                    color: "#00c9a7",
+                    label: "الإيرادات (ج.م)",
+                    yaxis: 1
+                },
+                {
+                    data: currentVisits.map((y, i) => [i + 0.15, y]),
+                    bars: {
+                        show: true,
+                        barWidth: 0.3,
+                        align: "center",
+                        fillColor: "#1e90ff"
+                    },
+                    color: "#1e90ff",
+                    label: "عدد الزيارات",
+                    yaxis: 2
+                }
+            ];
+
+            plot.setData(data);
+            plot.setupGrid();
+            plot.draw();
+
+            if (step < steps) {
+                step++;
+                setTimeout(animateBars, 20);
+            }
+        }
+
+        animateBars();
+
+        $("<div id='tooltip'></div>").css({
+            position: "absolute",
+            display: "none",
+            padding: "6px 10px",
+            "background-color": "#000",
+            color: "#fff",
+            opacity: 0.85,
+            "border-radius": "4px",
+            "font-size": "13px",
+            "font-weight": "500"
+        }).appendTo("body");
+
+        $("#flotBar1").bind("plothover", function(event, pos, item) {
+            if (item) {
+                const value = item.datapoint[1];
+                const label = item.series.label;
+                $("#tooltip")
+                    .html(`${label}: ${value}`)
+                    .css({
+                        top: item.pageY - 35,
+                        left: item.pageX + 5
+                    })
+                    .fadeIn(200);
+            } else {
+                $("#tooltip").hide();
             }
         });
 
-        // Pie Chart
-        var ctx2 = document.getElementById('chartPie').getContext('2d');
-        var chartPie = new Chart(ctx2, {
-            type: 'pie',
-            data: {
-                labels: ['حجوزات مؤكدة', 'حجوزات منتظرة', 'ملغية'],
-                datasets: [{
-                    data: [60, 25, 15],
-                    backgroundColor: ['#007bff', '#28a745', '#dc3545']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        rtl: true
+        const pieData = Object.entries(reservationsData).map(([label, value]) => ({
+            label: label,
+            data: value
+        }));
+
+        function labelFormatter(label, series) {
+            return `<div style="font-size:12px;text-align:center;padding:2px;color:white;">${label}<br>${Math.round(series.percent)}%</div>`;
+        }
+
+        $.plot("#flotPie1", pieData, {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 2 / 3,
+                        formatter: labelFormatter,
+                        threshold: 0.1
                     }
                 }
-            }
+            },
+            legend: {
+                show: false
+            },
+            grid: {
+                hoverable: true,
+                clickable: true
+            },
+            colors: ["#2299dd", "#f76a2d", "#ff9f43", "#ea5455"]
+        });
+
+        $("#flotPie1").bind("plothover", function(event, pos, obj) {
+            if (!obj) return;
+            const percent = parseFloat(obj.series.percent).toFixed(2);
+            $("#tooltip")
+                .html(`${obj.series.label}: ${percent}%`)
+                .css({
+                    top: pos.pageY + 5,
+                    left: pos.pageX + 5
+                })
+                .fadeIn(200);
         });
     });
 </script>
-
 @endsection

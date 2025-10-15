@@ -1,23 +1,19 @@
-<div class="col-xl-3 col-lg-6 col-md-6 col-xm-12">
-    <div class="card overflow-hidden sales-card {{ $bg }}">
-        <div class="pl-3 pt-3 pr-3 pb-2 pt-0">
-            <div>
-                <h6 class="mb-3 tx-12 text-white">{{ $title }}</h6>
-            </div>
-            <div class="pb-0 mt-0">
-                <div class="d-flex">
-                    <div>
-                        <h4 class="tx-20 font-weight-bold mb-1 text-white">
-                            {{ $value }}
-                        </h4>
+<div class="col-lg-6 col-xl-3 col-md-6 col-12">
+    <div class="card {{ $bg }} text-white">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-4">
+                    <div class="icon1 mt-2 text-center">
+                        <i class="{{ $icon }} tx-40"></i>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="mt-0 text-center">
+                        <span class="text-white">{{ $title }}</span>
+                        <h4 class="text-white mb-0">{{ $value }}</h4>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="chart-wrapper">
-            <span id="{{ $chartId }}" class="pt-1">
-                {{-- is_array($value) ? implode(',', $value) : $value --}}
-            </span>
         </div>
     </div>
 </div>
