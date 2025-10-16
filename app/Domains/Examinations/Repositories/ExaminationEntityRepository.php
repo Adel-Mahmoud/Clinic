@@ -2,34 +2,17 @@
 
 namespace App\Domains\Examinations\Repositories;
 
-use App\Domains\Examinations\Models\ExaminationEntity;
+use App\Domains\Visits\Models\VisitEntity;
 
 class ExaminationEntityRepository
 {
-    public function all()
+    public function getNextVisitInQueue()
     {
-        return ExaminationEntity::all();
-    }
-
-    public function find($id)
-    {
-        return ExaminationEntity::find($id);
-    }
-
-    public function create(array $data)
-    {
-        return ExaminationEntity::create($data);
-    }
-
-    public function update($id, array $data)
-    {
-        $model = ExaminationEntity::findOrFail($id);
-        $model->update($data);
-        return $model;
-    }
-
-    public function delete($id)
-    {
-        return ExaminationEntity::destroy($id);
+        return VisitEntity::where('status', 'pending')
+            ->with('patient')
+            ->orderBy('visit_date', 'asc')
+            ->orderBy('visit_time', 'asc')
+            ->orderBy('id', 'asc')
+            ->first();
     }
 }

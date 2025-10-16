@@ -14,6 +14,7 @@ class VisitIndex extends Component
     public $selected = [];
     public $selectAll = false;
     public $statusFilter = '';
+    public $sortDirection = 'desc';
 
     protected $paginationTheme = 'bootstrap';
 
@@ -26,6 +27,11 @@ class VisitIndex extends Component
     public function updatingSearch()
     {
         $this->resetPage();
+    }
+
+    public function toggleSortDirection()
+    {
+        $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
     }
 
     public function updatingStatusFilter()
@@ -114,8 +120,8 @@ class VisitIndex extends Component
             ->when($this->statusFilter, function ($query) {
                 $query->where('status', $this->statusFilter);
             })
-            ->orderBy('visit_date', 'desc')
-            ->orderBy('visit_time', 'asc')
+            ->orderBy('visit_date', $this->sortDirection)
+            ->orderBy('visit_time', $this->sortDirection)
             ->paginate(10);
 
         return view('visits::livewire.visit-index', compact('visits'));

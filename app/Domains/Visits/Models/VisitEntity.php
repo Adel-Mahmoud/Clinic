@@ -56,15 +56,13 @@ class VisitEntity extends Model
             return null;
         }
 
-        return VisitEntity::where('status', 'pending')
-            ->where('visit_date', $this->visit_date)
-            ->where(function ($q) {
-                $q->where('visit_time', '<', $this->visit_time)
-                    ->orWhere(function ($q2) {
-                        $q2->where('visit_time', $this->visit_time)
-                            ->where('id', '<', $this->id);
-                    });
-            })
-            ->count() + 1;
+        $orderedIds = VisitEntity::where('status', 'pending')
+            ->orderBy('visit_date')
+            ->orderBy('visit_time')
+            ->orderBy('id')
+            ->pluck('id')
+            ->toArray();
+
+        return array_search($this->id, $orderedIds) + 1;
     }
 }

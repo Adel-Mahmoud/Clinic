@@ -5,6 +5,12 @@
                 <input type="text" class="form-control" placeholder="بحث بالاسم، الخدمة، أو الملاحظات" wire:model.live.500ms="search">
             </div>
             <div class="col-12 col-md-3">
+                <button wire:click="toggleSortDirection" class="btn btn-secondary">
+                    <i class="fas fa-sort"></i>
+                    {{ $sortDirection === 'asc' ? 'عرض الأقدم أولاً' : 'عرض الأحدث أولاً' }}
+                </button>
+            </div>
+            <div class="col-12 col-md-3">
                 <select class="form-control" wire:model.live="statusFilter">
                     <option value="">جميع الحالات</option>
                     <option value="pending">معلق</option>
@@ -12,7 +18,7 @@
                     <option value="canceled">ملغي</option>
                 </select>
             </div>
-            <div class="col-12 col-md-6 text-md-end text-left">
+            <div class="col-12 col-md-3 text-md-end text-left">
                 @if(count($selected) > 0)
                 <button wire:click="confirmDeleteSelected" class="btn btn-danger">
                     <i class="fas fa-trash"></i> حذف الزيارات المحددة ({{ count($selected) }})
@@ -65,9 +71,13 @@
                             <td>{{ $visit->formatted_price }}</td>
                             <td>
                                 @if($visit->status == 'pending')
-                                <span class="badge bg-warning text-dark">معلق
-                                و رقم دوره {{ $visit->queue_position }}
-                                </span>
+                                    @if($visit->queue_position == 1)
+                                    <span class="badge bg-primary text-light">يكشف الان</span>
+                                    @else
+                                    <span class="badge bg-warning text-dark">معلق
+                                        و رقم دوره {{ $visit->queue_position }}
+                                    </span>
+                                    @endif
                                 @elseif($visit->status == 'completed')
                                 <span class="badge bg-success text-light">مكتمل</span>
                                 @elseif($visit->status == 'canceled')
