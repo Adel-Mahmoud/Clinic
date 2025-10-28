@@ -1,111 +1,551 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>نموذج مع تحميل</title>
-<style>
-  body {
-    font-family: sans-serif;
-    background: #f7f7f7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    padding-top: 50px;
-  }
-
-  form {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  input {
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-
-  button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-
-  button:hover {
-    background: #0066d6;
-  }
-
-  button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-
-  .spinner {
-    border: 2px solid white;
-    border-top: 2px solid transparent;
-    border-radius: 50%;
-    width: 16px;
-    height: 16px;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام العيادة الطبية - صفحة الكشف</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c7fb8;
+            --secondary-color: #7fcdbb;
+            --accent-color: #edf8b1;
+            --light-color: #f0f8ff;
+            --dark-color: #253237;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .patient-summary-card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+        
+        .patient-summary-card .card-header {
+            border-radius: 12px 12px 0 0 !important;
+            font-weight: 600;
+        }
+        
+        .patient-info-item {
+            padding: 0.5rem 0;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+        }
+        
+        .nav-tabs {
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--dark-color);
+            font-weight: 600;
+            border: none;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            border: none;
+            background-color: rgba(44, 127, 184, 0.1);
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .tab-content {
+            padding: 2rem;
+            background-color: white;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 10px 25px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d5f8a;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary-color);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+        }
+        
+        .medicine-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: var(--light-color);
+            border-radius: 6px;
+            border-right: 4px solid var(--secondary-color);
+        }
+        
+        .file-upload-area {
+            border: 2px dashed var(--primary-color);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            background-color: rgba(44, 127, 184, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-area:hover {
+            background-color: rgba(44, 127, 184, 0.1);
+        }
+        
+        .file-upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .file-list {
+            margin-top: 1.5rem;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: white;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .file-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-icon {
+            color: var(--primary-color);
+        }
+        
+        .visits-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .visits-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 15px;
+            text-align: right;
+        }
+        
+        .visits-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .visits-table tr:hover {
+            background-color: rgba(44, 127, 184, 0.05);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-tabs .nav-link {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .tab-content {
+                padding: 1.5rem;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .patient-summary-card .card-body .row > div {
+                border: none !important;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<div style="background:blue">
-<span class="spinner"></span>
-</div>
-<form>
-  <input required placeholder="أدخل النص">
-  <button type="submit">إرسال 1</button>
-</form>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <h1><i class="fas fa-stethoscope me-2"></i>صفحة الكشف - العيادة الطبية</h1>
+        </div>
+    </div>
 
-<form>
-  <input required placeholder="أدخل النص">
-  <button type="submit">إرسال 2</button>
-</form>
+    <!-- قسم بيانات المريض الثابتة فوق التابات -->
+    <div class="container mt-4">
+        <div class="card patient-summary-card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-user-injured me-2"></i>ملخص بيانات المريض</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 border-end">
+                        <div class="patient-info-item">
+                            <label class="form-label text-muted mb-1">اسم المريض</label>
+                            <p class="fw-bold" id="displayPatientName">أحمد محمد</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 border-end">
+                        <div class="patient-info-item">
+                            <label class="form-label text-muted mb-1">السن</label>
+                            <p class="fw-bold" id="displayPatientAge">35 سنة</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 border-end">
+                        <div class="patient-info-item">
+                            <label class="form-label text-muted mb-1">نوع الخدمة</label>
+                            <p class="fw-bold" id="displayServiceType">كشف</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="patient-info-item">
+                            <label class="form-label text-muted mb-1">الأعراض</label>
+                            <p class="fw-bold text-truncate" id="displaySymptoms">صداع، ارتفاع في درجة الحرارة، آلام في الجسم</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 border-end">
+                        <div class="patient-info-item">
+                            <label class="form-label text-muted mb-1">رقم الهاتف</label>
+                            <p class="fw-bold" id="displayPatientPhone" dir="ltr">+20 100 123 4567</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="patient-info-item">
+                            <label class="form-label text-muted mb-1">العنوان</label>
+                            <p class="fw-bold" id="displayPatientAddress">القاهرة - مصر الجديدة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<script>
-const forms = document.querySelectorAll('form');
-forms.forEach(form => {
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const button = form.querySelector('button');
-    button.disabled = true;
+    <div class="container">
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="diagnosis-tab" data-bs-toggle="tab" data-bs-target="#diagnosis" type="button" role="tab" aria-controls="diagnosis" aria-selected="true">
+                    <i class="fas fa-diagnoses me-1"></i> التشخيص
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="prescription-tab" data-bs-toggle="tab" data-bs-target="#prescription" type="button" role="tab" aria-controls="prescription" aria-selected="false">
+                    <i class="fas fa-prescription-bottle-alt me-1"></i> الرويشته
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tests-tab" data-bs-toggle="tab" data-bs-target="#tests" type="button" role="tab" aria-controls="tests" aria-selected="false">
+                    <i class="fas fa-vial me-1"></i> التحاليل والأشعة
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="attachments-tab" data-bs-toggle="tab" data-bs-target="#attachments" type="button" role="tab" aria-controls="attachments" aria-selected="false">
+                    <i class="fas fa-paperclip me-1"></i> المرفقات
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes" type="button" role="tab" aria-controls="notes" aria-selected="false">
+                    <i class="fas fa-sticky-note me-1"></i> الملاحظات
+                </button>
+            </li>
+        </ul>
 
-    const spinner = document.createElement('div');
-    spinner.classList.add('spinner');
-    button.appendChild(spinner);
+        <!-- Tabs Content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- التشخيص Tab -->
+            <div class="tab-pane fade show active" id="diagnosis" role="tabpanel" aria-labelledby="diagnosis-tab">
+                <h3 class="section-title">تشخيص الحالة</h3>
+                <div class="mb-3">
+                    <label for="diagnosisText" class="form-label">التشخيص</label>
+                    <textarea class="form-control" id="diagnosisText" rows="8" placeholder="أدخل التشخيص الطبي للحالة"></textarea>
+                </div>
+            </div>
 
-    setTimeout(() => {
-      spinner.remove();
-      button.disabled = false;
-      alert('تم الإرسال بنجاح ✅');
-    }, 2000); // محاكاة انتظار 2 ثانية
-  });
-});
-</script>
+            <!-- الرويشته Tab -->
+            <div class="tab-pane fade" id="prescription" role="tabpanel" aria-labelledby="prescription-tab">
+                <h3 class="section-title">الرويشته الطبية</h3>
+                <div class="row mb-4">
+                    <div class="col-md-10">
+                        <label for="medicineName" class="form-label">اسم الدواء</label>
+                        <input type="text" class="form-control" id="medicineName" placeholder="أدخل اسم الدواء">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" class="btn btn-success w-100" id="addMedicine">
+                            <i class="fas fa-plus me-1"></i> إضافة
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">الأدوية المضافة</div>
+                    <div class="card-body">
+                        <ul class="list-group" id="medicineList">
+                            <!-- سيتم إضافة الأدوية هنا ديناميكيًا -->
+                            <li class="medicine-item">
+                                <span>باراسيتامول 500 مج</span>
+                                <button type="button" class="btn btn-danger btn-sm delete-medicine">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </li>
+                            <li class="medicine-item">
+                                <span>فيتامين سي 1000 مج</span>
+                                <button type="button" class="btn btn-danger btn-sm delete-medicine">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-</body>
-</html>
+            <!-- التحاليل والأشعة Tab -->
+            <div class="tab-pane fade" id="tests" role="tabpanel" aria-labelledby="tests-tab">
+                <h3 class="section-title">التحاليل والأشعة المطلوبة</h3>
+                <div class="mb-4">
+                    <label class="form-label required">نوع الفحص</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="testType" id="xray" value="xray">
+                            <label class="form-check-label" for="xray">أشعة</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="testType" id="lab" value="lab" checked>
+                            <label class="form-check-label" for="lab">تحاليل</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="testType" id="both" value="both">
+                            <label class="form-check-label" for="both">كلاهما</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="testsDescription" class="form-label">التفاصيل</label>
+                    <textarea class="form-control" id="testsDescription" rows="6" placeholder="أدخل تفاصيل التحاليل أو الأشعة المطلوبة"></textarea>
+                </div>
+            </div>
 
+            <!-- المرفقات Tab -->
+            <div class="tab-pane fade" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
+                <h3 class="section-title">رفع المرفقات</h3>
+                
+                <div class="file-upload-area" id="uploadArea">
+                    <div class="file-upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h5>اسحب الملفات هنا أو انقر للرفع</h5>
+                    <p class="text-muted">يمكنك رفع الصور، ملفات PDF، أو مستندات Word (الحد الأقصى 10MB)</p>
+                    <input type="file" id="fileInput" multiple style="display: none;">
+                </div>
+                
+                <div class="file-list">
+                    <h5 class="mb-3">الملفات المرفوعة</h5>
+                    <div id="uploadedFiles">
+                        <!-- سيتم عرض الملفات المرفوعة هنا -->
+                        <div class="file-item">
+                            <div class="file-name">
+                                <i class="fas fa-file-pdf file-icon"></i>
+                                <span>تحليل_الدم.pdf</span>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> حذف
+                                </button>
+                            </div>
+                        </div>
+                        <div class="file-item">
+                            <div class="file-name">
+                                <i class="fas fa-file-image file-icon"></i>
+                                <span>صورة_الأشعة.jpg</span>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> حذف
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الملاحظات Tab -->
+            <div class="tab-pane fade" id="notes" role="tabpanel" aria-labelledby="notes-tab">
+                <h3 class="section-title">ملاحظات الكشف</h3>
+                <div class="mb-3">
+                    <label for="visitNotes" class="form-label">ملاحظات إضافية</label>
+                    <textarea class="form-control" id="visitNotes" rows="8" placeholder="أدخل أي ملاحظات إضافية حول حالة المريض أو الكشف"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="text-center mt-4 mb-5">
+            <button type="button" class="btn btn-primary btn-lg" id="saveData">
+                <i class="fas fa-save me-2"></i> حفظ بيانات الكشف
+            </button>
+        </div>
+
+        <hr class="my-5">
+
+        <!-- Previous Visits Table -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-history me-2"></i>الزيارات السابقة</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover visits-table">
+                        <thead>
+                            <tr>                         
+                                <th>الأعراض</th>
+                                <th>التاريخ</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>                          
+                                <td>صداع، ارتفاع في درجة الحرارة</td>
+                                <td>2023-10-15</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> عرض التفاصيل
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>                            
+                                <td>آلام في المعدة، غثيان</td>
+                                <td>2023-10-10</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> عرض التفاصيل
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>                              
+                                <td>سعال، احتقان بالحلق</td>
+                                <td>2023-10-05</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> عرض التفاصيل
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>                              
+                                <td>آلام في الظهر، تيبس في العضلات</td>
+                                <td>2023-09-28</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i> عرض التفاصيل
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>نظام العيادة الطبية &copy; 2023 - جميع الحقوق محفوظة</p>
+        </div>
+    </div>
