@@ -270,7 +270,7 @@
         const addDrugBtn = document.getElementById('addDrug');
         const drugList = document.getElementById('drugList');
         const suggestionsBox = document.getElementById('suggestions');
-        const allDrugs = @json($drugs - > pluck('name'));
+        const allDrugs = @json($drugs->pluck('name'));
 
         document.querySelectorAll('.test-type-label').forEach(label => {
             label.addEventListener('click', () => {
