@@ -2,6 +2,7 @@
 
 namespace App\Domains\Examinations\Repositories;
 
+use App\Domains\Drugs\Models\DrugEntity;
 use App\Domains\Visits\Models\VisitEntity;
 
 class ExaminationEntityRepository
@@ -14,5 +15,10 @@ class ExaminationEntityRepository
             ->orderBy('visit_time', 'asc')
             ->orderBy('id', 'asc')
             ->first();
+    }
+
+    public function getDrugs()
+    {
+        return DrugEntity::all();
     }
 }

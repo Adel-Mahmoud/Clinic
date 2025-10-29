@@ -16,8 +16,9 @@ class ExaminationEntityController extends Controller
 
     public function index()
     {
-        $NextVisit = $this->repo->getNextVisitInQueue();
-        // dd($NextVisit->patient->user);
-        return view('examinations::admin.index', compact('NextVisit'));
+        $nextVisit = $this->repo->getNextVisitInQueue();
+        $drugs = $this->repo->getDrugs();
+        // dd($nextVisit->patient);
+        return view('examinations::admin.index', compact('nextVisit', 'drugs'));
     }
 }

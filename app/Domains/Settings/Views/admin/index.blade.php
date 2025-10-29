@@ -56,8 +56,8 @@
 
                     </div>
 
-                    <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary"> حفظ التغييرات</button>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button type="submit" class="submit btn btn-primary"> حفظ التغييرات</button>
                     </div>
                 </form>
 

@@ -72,7 +72,7 @@
                             <td>
                                 @if($visit->status == 'pending')
                                     @if($visit->queue_position == 1)
-                                    <span class="badge bg-primary text-light">يكشف الان</span>
+                                    <span class="badge bg-primary text-light">دوره الان</span>
                                     @else
                                     <span class="badge bg-warning text-dark">معلق
                                         و رقم دوره {{ $visit->queue_position }}

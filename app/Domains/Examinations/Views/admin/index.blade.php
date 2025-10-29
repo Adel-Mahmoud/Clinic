@@ -1,364 +1,337 @@
-@extends('layouts.master',['titlePage'=>$titlePage ?? 'الكشف'])
+@extends('layouts.master', ['titlePage' => $titlePage ?? 'الكشف'])
 <x-page-header :titlePage="$titlePage ?? 'الكشف'" />
 
-@section('content')
-<div class="container-fluid">
-    <div class="row">
-        <!-- بيانات المريض -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="card-title mb-0">بيانات المريض</h5>
-                </div>
-                <div class="card-body">
-                    <div class="patient-info">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="avatar me-3">
-                                <img src="{{ asset('assets/images/default-avatar.png') }}" alt="صورة المريض" class="rounded-circle" width="60">
-                            </div>
-                            <div>
-                                <h6 class="mb-0">محمد أحمد</h6>
-                                <small class="text-muted">رقم الملف: #12345</small>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">العمر:</span> 32 سنة
-                        </div>
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">الجنس:</span> ذكر
-                        </div>
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">رقم الهاتف:</span> 0123456789
-                        </div>
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">آخر زيارة:</span> 15/10/2023
-                        </div>
-                    </div>
-                </div>
-            </div>
+@section('css')
+<link href="{{ URL::asset('assets/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ URL::asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
+<style>
+    .patient-info-card {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
 
-            <!-- الحالة الصحية العامة -->
-            <div class="card mt-3">
-                <div class="card-header bg-info text-white">
-                    <h5 class="card-title mb-0">الحالة الصحية العامة</h5>
-                </div>
-                <div class="card-body">
-                    <div class="health-info">
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">الطول:</span> 175 سم
-                        </div>
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">الوزن:</span> 75 كجم
-                        </div>
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">ضغط الدم:</span> 120/80
-                        </div>
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">السكر:</span> 95 ملغم/ديسيلتر
-                        </div>
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">الحساسية:</span> البنسلين
-                        </div>
-                        <div class="info-item mb-2">
-                            <span class="fw-bold">الأمراض المزمنة:</span> لا يوجد
-                        </div>
-                    </div>
-                </div>
-            </div>
+    .patient-info-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #0d6efd;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .patient-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: .75rem 1.5rem;
+    }
+
+    .patient-info-item {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dashed #dee2e6;
+        padding-bottom: 6px;
+    }
+
+    .patient-info-label {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .patient-info-value {
+        color: #0d6efd;
+        font-weight: 500;
+    }
+
+    .form-section {
+        background: #fff;
+        border-radius: 10px;
+        padding: 1.5rem;
+        border: 1px solid #e9ecef;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+        margin-bottom: 1.5rem;
+    }
+
+    .form-section-title {
+        color: #0d6efd;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #0d6efd25;
+        padding-bottom: 6px;
+    }
+
+    .drug-item {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 8px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .drug-item:hover {
+        background: #eef4ff;
+    }
+
+    .test-type-label {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 10px;
+        cursor: pointer;
+        transition: all .3s;
+    }
+
+    .test-type-label.active {
+        background: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
+    }
+
+    .visits-table th {
+        background: #0d6efd;
+        color: #fff;
+        border: none;
+        font-weight: 600;
+    }
+
+    .visits-table td {
+        vertical-align: middle;
+        border-color: #f1f1f1;
+    }
+
+    .suggestions {
+        position: absolute;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        margin-top: 2px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .suggestion-item {
+        padding: 8px 10px;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+    .suggestion-item:hover {
+        background: #0d6efd;
+        color: #fff;
+    }
+</style>
+@endsection
+
+@section('content')
+<div class="container-fluid p-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold"><i class="fe fe-user-check me-1"></i>
+                نوع الخدمة : 
+            {{ $nextVisit->service->name }}
+            </h5>
+            <small>تاريخ آخر زيارة: {{ now()->format('Y-m-d') }}</small>
         </div>
 
-        <!-- قسم الكشف -->
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h5 class="card-title mb-0">الكشف الطبي</h5>
+        <div class="card-body">
+            <div class="patient-info-card mb-4">
+                <div class="patient-info-header"><i class="fe fe-user fs-5"></i><span>بيانات المريض</span></div>
+                <div class="patient-info-grid">
+                    <div class="patient-info-item"><span class="patient-info-label">الاسم:</span><span class="patient-info-value">{{ $nextVisit->patient->user->name }}</span></div>
+                    <div class="patient-info-item"><span class="patient-info-label">العمر:</span><span class="patient-info-value">{{ \Carbon\Carbon::parse($nextVisit->patient->birth_date)->age }} سنة</span></div>
+                    <div class="patient-info-item"><span class="patient-info-label">الجنس:</span><span class="patient-info-value">{{ $nextVisit->patient->gender == 'male' ? 'ذكر' : 'أنثى' }}</span></div>
+                    <div class="patient-info-item"><span class="patient-info-label">الحالة الصحية العامة:</span><span class="patient-info-value">{{ $nextVisit->patient->general_health_status }}</span></div>
+                    <div class="patient-info-item"><span class="patient-info-label">حساسية الأدوية:</span><span class="patient-info-value">{{ $nextVisit->patient->drug_allergy ?? 'غير محدد' }}</span></div>
                 </div>
-                <div class="card-body">
-                    <form id="examinationForm">
-                        <!-- الأعراض -->
-                        <div class="mb-4">
-                            <label for="symptoms" class="form-label fw-bold">الأعراض</label>
-                            <textarea class="form-control" id="symptoms" rows="3" placeholder="أدخل الأعراض التي يشكو منها المريض"></textarea>
-                        </div>
+            </div>
 
-                        <!-- التشخيص -->
-                        <div class="mb-4">
-                            <label for="diagnosis" class="form-label fw-bold">التشخيص</label>
-                            <textarea class="form-control" id="diagnosis" rows="3" placeholder="أدخل التشخيص"></textarea>
-                        </div>
+            <form id="diagnosisForm">
+                <div class="form-section">
+                    <h6 class="form-section-title"><i class="fe fe-activity me-2"></i> التشخيص الطبي</h6>
+                    <div class="row g-4">
+                        <div class="col-md-6"><label class="form-label fw-semibold">الأعراض</label><textarea class="form-control" rows="4" placeholder="وصف الأعراض..." required></textarea></div>
+                        <div class="col-md-6"><label class="form-label fw-semibold">التشخيص</label><textarea class="form-control" rows="4" placeholder="نتيجة التشخيص..." required></textarea></div>
+                    </div>
+                </div>
 
-                        <!-- الروشتة -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold">الروشتة</label>
-                            <div class="input-group mb-2">
-                                <input type="text" class="form-control" id="medicineInput" placeholder="اكتب اسم الدواء">
-                                <button class="btn btn-outline-primary" type="button" id="addMedicineBtn">إضافة</button>
+                <div class="form-section">
+                    <h6 class="form-section-title"><i class="fe fe-package me-2"></i> الروشتة الطبية</h6>
+                    <div class="row g-3">
+                        <div class="col-md-8 position-relative">
+                            <label class="form-label fw-semibold">إضافة دواء</label>
+                            <div class="input-group">
+                                <input type="text" id="drugInput" class="form-control" placeholder="اكتب اسم الدواء...">
+                                <button type="button" id="addDrug" class="btn btn-primary"><i class="fe fe-plus"></i></button>
                             </div>
-                            <div id="medicineSuggestions" class="suggestions-dropdown"></div>
-                            <ul class="list-group mt-2" id="medicineList">
-                                <!-- سيتم إضافة الأدوية هنا -->
-                            </ul>
+                            <div id="suggestions" class="suggestions d-none"></div>
                         </div>
-
-                        <!-- التحاليل الطبية -->
-                        <div class="mb-4">
-                            <label for="medicalTests" class="form-label fw-bold">التحاليل الطبية</label>
-                            <textarea class="form-control" id="medicalTests" rows="2" placeholder="أدخل التحاليل المطلوبة"></textarea>
+                        <div class="col-md-12 mt-3">
+                            <div id="drugList" class="row g-2"></div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- الأشعة -->
-                        <div class="mb-4">
-                            <label for="radiology" class="form-label fw-bold">الأشعة</label>
-                            <textarea class="form-control" id="radiology" rows="2" placeholder="أدخل الأشعة المطلوبة"></textarea>
-                        </div>
-
-                        <!-- المرفقات -->
-                        <div class="mb-4">
-                            <label for="attachments" class="form-label fw-bold">المرفقات (صور الأشعة، إلخ)</label>
-                            <input type="file" class="form-control" id="attachments" multiple accept="image/*">
-                            <div id="attachmentsPreview" class="mt-2 d-flex flex-wrap gap-2">
-                                <!-- سيتم عرض معاينة المرفقات هنا -->
+                <div class="form-section">
+                    <h6 class="form-section-title"><i class="fe fe-sliders me-2"></i> التحاليل والأشعة المطلوبة</h6>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">نوع الفحص</label>
+                            <div class="d-flex flex-column gap-2">
+                                <label class="test-type-label"><input type="radio" name="testType" value="lab"> تحاليل</label>
+                                <label class="test-type-label"><input type="radio" name="testType" value="xray"> أشعة</label>
+                                <label class="test-type-label"><input type="radio" name="testType" value="both"> كلاهما</label>
                             </div>
                         </div>
-
-                        <!-- الملاحظات -->
-                        <div class="mb-4">
-                            <label for="notes" class="form-label fw-bold">ملاحظات</label>
-                            <textarea class="form-control" id="notes" rows="3" placeholder="أدخل أي ملاحظات إضافية"></textarea>
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold">تفاصيل الفحص</label>
+                            <textarea class="form-control" rows="3" placeholder="تفاصيل الفحوص المطلوبة..."></textarea>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- أزرار الحفظ -->
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-secondary">إلغاء</button>
-                            <button type="submit" class="btn btn-primary">حفظ الكشف</button>
-                        </div>
-                    </form>
+                <div class="form-section">
+                    <h6 class="form-section-title"><i class="fe fe-edit me-2"></i> ملاحظات إضافية</h6>
+                    <textarea class="form-control" rows="3" placeholder="ملاحظات إضافية..."></textarea>
+                </div>
+
+                <div class="form-section">
+                    <h6 class="form-section-title"><i class="fe fe-paperclip me-2"></i> المرفقات</h6>
+                    <input type="file" name="files" class="dropify" data-height="150" multiple>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg submit px-5"><i class="fe fe-save me-2"></i> حفظ الكشف</button>
+                </div>
+            </form>
+
+            <div class="form-section mt-4">
+                <h6 class="form-section-title"><i class="fe fe-clock me-2"></i> سجل الزيارات السابقة</h6>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center visits-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>التاريخ</th>
+                                <th>نوع الخدمة</th>
+                                <th>الأعراض</th>
+                                <th>التشخيص</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2025-10-28</td>
+                                <td><span class="badge bg-primary">كشف عادي</span></td>
+                                <td>صداع، حرارة</td>
+                                <td>نزلة برد</td>
+                                <td><button class="btn btn-outline-primary btn-sm"><i class="fe fe-eye"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>2025-10-20</td>
+                                <td><span class="badge bg-success">متابعة</span></td>
+                                <td>آلام معدة</td>
+                                <td>التهاب معدة</td>
+                                <td><button class="btn btn-outline-primary btn-sm"><i class="fe fe-eye"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endsection
 
-<style>
-    .card {
-        border: none;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        margin-bottom: 20px;
-    }
-    
-    .card-header {
-        border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    .info-item {
-        padding: 5px 0;
-        border-bottom: 1px solid #f0f0f0;
-    }
-    
-    .suggestions-dropdown {
-        position: absolute;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        width: calc(100% - 90px);
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 1000;
-        display: none;
-    }
-    
-    .suggestion-item {
-        padding: 8px 12px;
-        cursor: pointer;
-        border-bottom: 1px solid #f0f0f0;
-    }
-    
-    .suggestion-item:hover {
-        background-color: #f8f9fa;
-    }
-    
-    .medicine-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 12px;
-    }
-    
-    .delete-medicine {
-        color: #dc3545;
-        cursor: pointer;
-        background: none;
-        border: none;
-        font-size: 18px;
-    }
-    
-    .attachment-preview {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-    
-    .attachment-preview img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    .remove-attachment {
-        position: absolute;
-        top: 2px;
-        right: 2px;
-        background: rgba(220, 53, 69, 0.8);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 20px;
-        height: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        cursor: pointer;
-    }
-</style>
+@section('js')
+<script src="{{ URL::asset('assets/plugins/fileuploads/js/fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fileuploads/js/file-upload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.ui.widget.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.iframe-transport.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/jquery.fancy-fileupload.js') }}"></script>
+<script src="{{ URL::asset('assets/plugins/fancyuploder/fancy-uploader.js') }}"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const medicineInput = document.getElementById('medicineInput');
-        const medicineList = document.getElementById('medicineList');
-        const addMedicineBtn = document.getElementById('addMedicineBtn');
-        const suggestionsDropdown = document.getElementById('medicineSuggestions');
-        const attachmentsInput = document.getElementById('attachments');
-        const attachmentsPreview = document.getElementById('attachmentsPreview');
-        
-        // قائمة الأدوية المقترحة
-        const medicineSuggestions = [
-            "باراسيتامول",
-            "أموكسيسيلين",
-            "إيبوبروفين",
-            "أسبيرين",
-            "ديكلوفيناك",
-            "سيميتيدين",
-            "أوميبرازول",
-            "ميتفورمين",
-            "أتينولول",
-            "لوسارتان"
-        ];
-        
-        // عرض الاقتراحات عند الكتابة
-        medicineInput.addEventListener('input', function() {
-            const inputValue = this.value.trim().toLowerCase();
-            suggestionsDropdown.innerHTML = '';
-            
-            if (inputValue.length > 0) {
-                const filteredSuggestions = medicineSuggestions.filter(medicine => 
-                    medicine.toLowerCase().includes(inputValue)
-                );
-                
-                if (filteredSuggestions.length > 0) {
-                    filteredSuggestions.forEach(medicine => {
-                        const suggestionItem = document.createElement('div');
-                        suggestionItem.className = 'suggestion-item';
-                        suggestionItem.textContent = medicine;
-                        suggestionItem.addEventListener('click', function() {
-                            medicineInput.value = medicine;
-                            suggestionsDropdown.style.display = 'none';
-                        });
-                        suggestionsDropdown.appendChild(suggestionItem);
-                    });
-                    suggestionsDropdown.style.display = 'block';
-                } else {
-                    suggestionsDropdown.style.display = 'none';
-                }
-            } else {
-                suggestionsDropdown.style.display = 'none';
-            }
-        });
-        
-        // إخفاء الاقتراحات عند النقر خارجها
-        document.addEventListener('click', function(e) {
-            if (!medicineInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
-                suggestionsDropdown.style.display = 'none';
-            }
-        });
-        
-        // إضافة دواء إلى القائمة
-        function addMedicine() {
-            const medicineName = medicineInput.value.trim();
-            if (medicineName) {
-                const listItem = document.createElement('li');
-                listItem.className = 'list-group-item medicine-item';
-                
-                const medicineText = document.createElement('span');
-                medicineText.textContent = medicineName;
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'delete-medicine';
-                deleteBtn.innerHTML = '&times;';
-                deleteBtn.addEventListener('click', function() {
-                    listItem.remove();
-                });
-                
-                listItem.appendChild(medicineText);
-                listItem.appendChild(deleteBtn);
-                medicineList.appendChild(listItem);
-                
-                medicineInput.value = '';
-                suggestionsDropdown.style.display = 'none';
-            }
-        }
-        
-        addMedicineBtn.addEventListener('click', addMedicine);
-        
-        medicineInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addMedicine();
-            }
-        });
-        
-        // معاينة المرفقات
-        attachmentsInput.addEventListener('change', function() {
-            attachmentsPreview.innerHTML = '';
-            
-            Array.from(this.files).forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        const previewDiv = document.createElement('div');
-                        previewDiv.className = 'attachment-preview';
-                        
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        
-                        const removeBtn = document.createElement('button');
-                        removeBtn.className = 'remove-attachment';
-                        removeBtn.innerHTML = '&times;';
-                        removeBtn.addEventListener('click', function() {
-                            previewDiv.remove();
-                        });
-                        
-                        previewDiv.appendChild(img);
-                        previewDiv.appendChild(removeBtn);
-                        attachmentsPreview.appendChild(previewDiv);
-                    };
-                    
-                    reader.readAsDataURL(file);
-                }
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('diagnosisForm');
+        const button = form?.querySelector('.submit');
+        const input = document.getElementById('drugInput');
+        const addDrugBtn = document.getElementById('addDrug');
+        const drugList = document.getElementById('drugList');
+        const suggestionsBox = document.getElementById('suggestions');
+        const allDrugs = @json($drugs - > pluck('name'));
+
+        document.querySelectorAll('.test-type-label').forEach(label => {
+            label.addEventListener('click', () => {
+                document.querySelectorAll('.test-type-label').forEach(l => l.classList.remove('active'));
+                label.classList.add('active');
             });
         });
-        
-        // إرسال النموذج
-        document.getElementById('examinationForm').addEventListener('submit', function(e) {
+
+        input?.addEventListener('input', () => {
+            const q = input.value.trim().toLowerCase();
+            suggestionsBox.innerHTML = '';
+            if (!q) return suggestionsBox.classList.add('d-none');
+            const matches = allDrugs.filter(d => d.toLowerCase().includes(q));
+            if (!matches.length) return suggestionsBox.classList.add('d-none');
+            suggestionsBox.classList.remove('d-none');
+            matches.forEach(drug => {
+                const div = document.createElement('div');
+                div.className = 'suggestion-item';
+                div.textContent = drug;
+                div.onclick = () => {
+                    input.value = drug;
+                    suggestionsBox.classList.add('d-none');
+                };
+                suggestionsBox.appendChild(div);
+            });
+        });
+
+        addDrugBtn?.addEventListener('click', () => {
+            const drug = input.value.trim();
+            if (!drug) return;
+            const id = 'drug-' + Date.now();
+            drugList.insertAdjacentHTML('beforeend', `
+            <div class="col-md-6" id="${id}">
+                <div class="drug-item">
+                    <span>${drug}</span>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="document.getElementById('${id}').remove()">
+                        <i class="fe fe-trash-2"></i>
+                    </button>
+                </div>
+            </div>
+        `);
+            input.value = '';
+            suggestionsBox.classList.add('d-none');
+        });
+
+        form?.addEventListener('submit', e => {
             e.preventDefault();
-            
-            // هنا يمكنك إضافة كود إرسال البيانات إلى الخادم
-            alert('تم حفظ بيانات الكشف بنجاح');
+            if (!button) return;
+            button.disabled = true;
+            const original = button.innerHTML;
+            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري الحفظ...';
+            setTimeout(() => {
+                button.innerHTML = original;
+                button.disabled = false;
+                Swal.fire({
+                    icon: 'success',
+                    title: 'تم الحفظ بنجاح',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }, 1200);
         });
     });
 </script>
