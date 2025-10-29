@@ -8,6 +8,14 @@
 @endsection
 
 @section('content')
+@if ($errors->any())
+    @foreach ($errors->all() as $error)
+        <div class="alert alert-danger mb-2">
+            {{ $error }}
+        </div>
+    @endforeach
+@endif
+
 <div class="container-fluid p-4">
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
@@ -36,8 +44,8 @@
                 <div class="form-section">
                     <h6 class="form-section-title"><i class="fe fe-activity me-2"></i> التشخيص الطبي</h6>
                     <div class="row g-4">
-                        <div class="col-md-6"><label class="form-label fw-semibold">الأعراض</label><textarea class="form-control" rows="4" placeholder="وصف الأعراض..." required></textarea></div>
-                        <div class="col-md-6"><label class="form-label fw-semibold">التشخيص</label><textarea class="form-control" rows="4" placeholder="نتيجة التشخيص..." required></textarea></div>
+                        <div class="col-md-6"><label class="form-label fw-semibold">الأعراض</label><textarea name="symptoms" class="form-control" rows="4" placeholder="وصف الأعراض..." required></textarea></div>
+                        <div class="col-md-6"><label class="form-label fw-semibold">التشخيص</label><textarea name="diagnosis" class="form-control" rows="4" placeholder="نتيجة التشخيص..." required></textarea></div>
                     </div>
                 </div>
 
