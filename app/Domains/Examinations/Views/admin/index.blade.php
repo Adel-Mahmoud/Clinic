@@ -4,131 +4,7 @@
 @section('css')
 <link href="{{ URL::asset('assets/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ URL::asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-<style>
-    .patient-info-card {
-        background: #fff;
-        border: 1px solid #e9ecef;
-        border-radius: 12px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
-        padding: 1.5rem;
-        transition: all 0.3s ease;
-    }
-
-    .patient-info-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #0d6efd;
-        font-weight: 700;
-        margin-bottom: 1rem;
-    }
-
-    .patient-info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: .75rem 1.5rem;
-    }
-
-    .patient-info-item {
-        display: flex;
-        justify-content: space-between;
-        border-bottom: 1px dashed #dee2e6;
-        padding-bottom: 6px;
-    }
-
-    .patient-info-label {
-        font-weight: 600;
-        color: #495057;
-    }
-
-    .patient-info-value {
-        color: #0d6efd;
-        font-weight: 500;
-    }
-
-    .form-section {
-        background: #fff;
-        border-radius: 10px;
-        padding: 1.5rem;
-        border: 1px solid #e9ecef;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-        margin-bottom: 1.5rem;
-    }
-
-    .form-section-title {
-        color: #0d6efd;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        border-bottom: 2px solid #0d6efd25;
-        padding-bottom: 6px;
-    }
-
-    .drug-item {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 8px 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 6px;
-    }
-
-    .drug-item:hover {
-        background: #eef4ff;
-    }
-
-    .test-type-label {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 10px;
-        cursor: pointer;
-        transition: all .3s;
-    }
-
-    .test-type-label.active {
-        background: #0d6efd;
-        color: #fff;
-        border-color: #0d6efd;
-    }
-
-    .visits-table th {
-        background: #0d6efd;
-        color: #fff;
-        border: none;
-        font-weight: 600;
-    }
-
-    .visits-table td {
-        vertical-align: middle;
-        border-color: #f1f1f1;
-    }
-
-    .suggestions {
-        position: absolute;
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        width: 100%;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 1000;
-        margin-top: 2px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .suggestion-item {
-        padding: 8px 10px;
-        cursor: pointer;
-        transition: background .2s;
-    }
-
-    .suggestion-item:hover {
-        background: #0d6efd;
-        color: #fff;
-    }
-</style>
+<link href="{{ URL::asset('assets/css/examination.css') }}" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -136,8 +12,8 @@
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0 fw-bold"><i class="fe fe-user-check me-1"></i>
-                نوع الخدمة : 
-            {{ $nextVisit->service->name }}
+                نوع الخدمة :
+                {{ $nextVisit->service->name }}
             </h5>
             <small>تاريخ آخر زيارة: {{ now()->format('Y-m-d') }}</small>
         </div>
@@ -154,7 +30,9 @@
                 </div>
             </div>
 
-            <form id="diagnosisForm">
+            <form id="diagnosisForm" action="{{ route('admin.examinations.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="visit_id" value="{{ $nextVisit->id }}">
                 <div class="form-section">
                     <h6 class="form-section-title"><i class="fe fe-activity me-2"></i> التشخيص الطبي</h6>
                     <div class="row g-4">
@@ -176,6 +54,21 @@
                         </div>
                         <div class="col-md-12 mt-3">
                             <div id="drugList" class="row g-2"></div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-center d-none" id="drugTable">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>اسم الدواء</th>
+                                        <th>الجرعة</th>
+                                        <th>المدة</th>
+                                        <th>الشكل</th>
+                                        <th>تعليمات</th>
+                                        <th style="width: 60px">حذف</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="drugRows"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -205,7 +98,7 @@
 
                 <div class="form-section">
                     <h6 class="form-section-title"><i class="fe fe-paperclip me-2"></i> المرفقات</h6>
-                    <input type="file" name="files" class="dropify" data-height="150" multiple>
+                    <input type="file" class="dropify" data-height="150" name="attachments[]" multiple>
                 </div>
 
                 <div class="text-center mt-4">
@@ -279,45 +172,149 @@
             });
         });
 
+        let suggestionIndex = -1; 
+
         input?.addEventListener('input', () => {
             const q = input.value.trim().toLowerCase();
             suggestionsBox.innerHTML = '';
+            suggestionIndex = -1;
+
             if (!q) return suggestionsBox.classList.add('d-none');
+
             const matches = allDrugs.filter(d => d.toLowerCase().includes(q));
             if (!matches.length) return suggestionsBox.classList.add('d-none');
+
             suggestionsBox.classList.remove('d-none');
-            matches.forEach(drug => {
+
+            matches.forEach((drug, index) => {
                 const div = document.createElement('div');
                 div.className = 'suggestion-item';
                 div.textContent = drug;
+                div.dataset.index = index;
+
                 div.onclick = () => {
-                    input.value = drug;
                     suggestionsBox.classList.add('d-none');
+                    addDrugToTable(drug);
+                    input.value = '';
                 };
+
                 suggestionsBox.appendChild(div);
             });
         });
 
+        input?.addEventListener('keydown', (e) => {
+
+            const items = suggestionsBox.querySelectorAll('.suggestion-item');
+
+            // ↓ Down Arrow
+            if (e.key === 'ArrowDown' && items.length) {
+                e.preventDefault();
+                suggestionIndex = (suggestionIndex + 1) % items.length;
+            }
+
+            // ↑ Up Arrow
+            if (e.key === 'ArrowUp' && items.length) {
+                e.preventDefault();
+                suggestionIndex = (suggestionIndex - 1 + items.length) % items.length;
+            }
+
+            items.forEach((el, idx) => {
+                el.classList.toggle('active', idx === suggestionIndex);
+            });
+
+            if (e.key === 'Tab' && items.length) {
+                e.preventDefault();
+                suggestionIndex = 0;
+                items[0].classList.add('active');
+            }
+
+            if (e.key === 'Enter' && suggestionIndex >= 0) {
+                e.preventDefault();
+                const selectedDrug = items[suggestionIndex].textContent.trim();
+                addDrugToTable(selectedDrug);
+                input.value = '';
+                suggestionsBox.classList.add('d-none');
+                suggestionIndex = -1;
+            }
+        });
+
+        function addDrugToForm(drug) {
+            const normalizedDrug = drug.trim();
+
+            if (!normalizedDrug) return;
+
+            const exists = Array.from(drugList.querySelectorAll('.drug-item span'))
+                .some(el => el.textContent.trim() === normalizedDrug);
+
+            if (exists) {
+                alert('هذا الدواء مضاف مسبقًا!');
+                return;
+            }
+
+            const id = 'drug-' + Date.now();
+            drugList.insertAdjacentHTML('beforeend', `
+                <div class="col-md-6" id="${id}">
+                    <div class="drug-item">
+                        <span>${normalizedDrug}</span>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="document.getElementById('${id}').remove()">
+                            <i class="fe fe-trash-2"></i>
+                        </button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function addDrugToTable(drug) {
+            document.getElementById('drugTable').classList.remove('d-none');
+            const normalizedDrug = drug.trim();
+            if (!normalizedDrug) return;
+
+            const exists = Array.from(document.querySelectorAll('#drugRows tr td:first-child'))
+                .some(el => el.textContent.trim() === normalizedDrug);
+
+            if (exists) {
+                alert('هذا الدواء مضاف مسبقًا!');
+                return;
+            }
+
+            const id = 'drug-' + Date.now();
+
+            const row = `
+                <tr id="${id}">
+                    <td>${normalizedDrug}<input type="hidden" name="drugs[${id}][name]" value="${normalizedDrug}"></td>
+                    <td><input type="text" class="form-control" name="drugs[${id}][dose]" placeholder="مثل قرص واحد مرتين يومياً"></td>
+                    <td><input type="text" class="form-control" name="drugs[${id}][duration]" placeholder="مثال: 5 أيام"></td>
+                    <td>
+                        <select class="form-control" name="drugs[${id}][form]">
+                            <option value="">اختر...</option>
+                            <option value="tablet">قرص</option>
+                            <option value="syrup">شراب</option>
+                            <option value="injection">حقنة</option>
+                            <option value="capsule">كبسولة</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" name="drugs[${id}][instructions]" placeholder="تعليمات الاستخدام"></td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-danger" onclick="document.getElementById('${id}').remove()">
+                            <i class="fe fe-trash-2"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+
+            document.getElementById('drugRows').insertAdjacentHTML('beforeend', row);
+        }
+
         addDrugBtn?.addEventListener('click', () => {
             const drug = input.value.trim();
             if (!drug) return;
-            const id = 'drug-' + Date.now();
-            drugList.insertAdjacentHTML('beforeend', `
-            <div class="col-md-6" id="${id}">
-                <div class="drug-item">
-                    <span>${drug}</span>
-                    <button type="button" class="btn btn-sm btn-danger" onclick="document.getElementById('${id}').remove()">
-                        <i class="fe fe-trash-2"></i>
-                    </button>
-                </div>
-            </div>
-        `);
+            addDrugToTable(drug);
             input.value = '';
             suggestionsBox.classList.add('d-none');
         });
 
         form?.addEventListener('submit', e => {
-            e.preventDefault();
+            // e.preventDefault();
             if (!button) return;
             button.disabled = true;
             const original = button.innerHTML;
