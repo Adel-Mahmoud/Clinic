@@ -11,16 +11,44 @@ use App\Domains\Examinations\Models\ExaminationAttachment;
 
 class ExaminationEntityRepository
 {
-    public function getNextVisitInQueue()
+    // public function getNowVisitInQueue()
+    // {
+    //     return VisitEntity::where('status', 'pending')
+    //         ->with('patient')
+    //         ->orderBy('visit_date', 'asc')
+    //         ->orderBy('visit_time', 'asc')
+    //         ->orderBy('id', 'asc')
+    //         ->first();
+    // }
+    public function getNowVisitInQueue()
     {
-        return VisitEntity::where('status', 'pending')
+        $nowVisit = VisitEntity::where('status', 'pending')
             ->with('patient')
             ->orderBy('visit_date', 'asc')
             ->orderBy('visit_time', 'asc')
             ->orderBy('id', 'asc')
             ->first();
+    
+        if (!$nowVisit) {
+            return [
+                'now' => null,
+                'last_completed' => null
+            ];
+        }
+    
+        $lastCompleted = VisitEntity::where('patient_id', $nowVisit->patient_id)
+            ->where('status', 'completed')
+            ->orderBy('visit_date', 'desc')
+            ->orderBy('visit_time', 'desc')
+            ->orderBy('id', 'desc')
+            ->first();
+    
+        return [
+            'now' => $nowVisit,
+            'last_completed' => $lastCompleted
+        ];
     }
-
+    
     public function getDrugs()
     {
         return DrugEntity::all();

@@ -23,8 +23,8 @@
 }
 
 .patient-info-item {
-    display: flex;
-    justify-content: space-between;
+    /* display: flex;
+    justify-content: space-between; */
     border-bottom: 1px dashed #dee2e6;
     padding-bottom: 6px;
 }

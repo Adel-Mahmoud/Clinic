@@ -17,11 +17,15 @@ class ExaminationEntityController extends Controller
 
     public function index()
     {
-        $nextVisit = $this->repo->getNextVisitInQueue();
+        $visitData = $this->repo->getNowVisitInQueue();
+
+        $nowVisit = $visitData['now'];
+        $lastCompleted = $visitData['last_completed'];
         $drugs = $this->repo->getDrugs();
-        return view('examinations::admin.index', compact('nextVisit', 'drugs'));
+
+        return view('examinations::admin.index', compact('nowVisit', 'lastCompleted', 'drugs'));
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -33,6 +37,12 @@ class ExaminationEntityController extends Controller
 
         $this->repo->store($request);
 
-        return redirect()->back()->with('success', 'تم حفظ الكشف بنجاح');
+        return redirect()
+            ->back()
+            ->with('swal', [
+                'type'  => 'success',
+                'title' => 'تم الإضافة!',
+                'text'  => 'تم حفظ الكشف بنجاح',
+            ]);
     }
 }

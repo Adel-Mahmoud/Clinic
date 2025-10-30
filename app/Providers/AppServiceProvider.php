@@ -23,5 +23,9 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->bound('router')) {
             $this->app['router']->aliasMiddleware('auth.admin', \App\Http\Middleware\RedirectIfAdmin::class);
         }
+
+        if (env('FORCE_HTTPS', false)) {
+            \Illuminate\Support\Facades\URL::forceScheme('https'); 
+        }
     }
 }
