@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>روشتة طبية</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+            background-color: #f8f9fa;
+            margin: 20px;
+            color: #000;
+        }
+
+        .prescription {
+            background: #fff;
+            border: 2px solid #007bff;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .info {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .info strong {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .notes {
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            text-align: left;
+            font-size: 14px;
+            border-top: 2px solid #007bff;
+            padding-top: 10px;
+            color: #555;
+        }
+
+        .print-btn {
+            display: block;
+            margin: 20px auto;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="prescription">
+        <div class="header">
+            <h2>🏥 عيادة د. أحمد عبد الرحمن</h2>
+            <p><strong>التخصص:</strong> الباطنة العامة</p>
+            <p><strong>التاريخ:</strong> 2025-10-08</p>
+        </div>
+
+        <div class="info">
+            <p><strong>اسم المريض:</strong> محمد علي حسن</p>
+            <p><strong>العمر:</strong> 35 سنة</p>
+            <p><strong>التشخيص:</strong> نزلة برد حادة مع التهاب بسيط في الحلق</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>اسم الدواء</th>
+                    <th>الشكل</th>
+                    <th>الجرعة</th>
+                    <th>المدة</th>
+                    <th>تعليمات</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Panadol 500mg</td>
+                    <td>أقراص</td>
+                    <td>قرص كل 8 ساعات</td>
+                    <td>5 أيام</td>
+                    <td>بعد الأكل</td>
+                </tr>
+                <tr>
+                    <td>Augmentin 1g</td>
+                    <td>أقراص</td>
+                    <td>قرص كل 12 ساعة</td>
+                    <td>7 أيام</td>
+                    <td>بعد الأكل مباشرة</td>
+                </tr>
+                <tr>
+                    <td>Cataflam 50mg</td>
+                    <td>أقراص</td>
+                    <td>قرص عند اللزوم للألم</td>
+                    <td>حسب الحاجة</td>
+                    <td>لا تتجاوز 3 أقراص باليوم</td>
+                </tr>
+                <tr>
+                    <td>Otrivin Spray</td>
+                    <td>بخاخ أنفي</td>
+                    <td>بخة في كل فتحة</td>
+                    <td>3 مرات يوميًا</td>
+                    <td>لا يستخدم لأكثر من 5 أيام</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="notes">
+            <strong>ملاحظات الطبيب:</strong>
+            <p>الراحة التامة لمدة يومين. شرب سوائل دافئة بكثرة. مراجعة إذا استمرت الحرارة لأكثر من 3 أيام.</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>👨‍⚕️ توقيع الطبيب:</strong> د. أحمد عبد الرحمن</p>
+            <p><strong>رقم الترخيص:</strong> 245879</p>
+        </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ طباعة الروشتة</button>
+
+</body>
+
+</html>
