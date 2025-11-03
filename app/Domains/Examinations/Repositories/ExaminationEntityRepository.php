@@ -65,6 +65,8 @@ class ExaminationEntityRepository
                 'patient_id' => $visit->patient_id,
                 'symptoms' => $request->symptoms,
                 'diagnosis' => $request->diagnosis,
+                'test_type' => $request->test_type,
+                'test_details' => $request->test_details,
                 'notes' => $request->notes,
                 'tests_type' => $request->testType,
                 'tests_details' => $request->tests_details,
@@ -99,7 +101,14 @@ class ExaminationEntityRepository
 
             $visit->update(['status' => 'completed']);
 
-            return $examination;
+            // return $examination;
+            return $examination->id;
         });
+    }
+
+    public function getVisitById($id)
+    {
+    return ExaminationEntity::with(['visit', 'drugs', 'attachments'])
+        ->findOrFail($id);
     }
 }

@@ -8,7 +8,7 @@ class ExaminationEntity extends Model
 {
     protected $table = 'examinations';
 
-    protected $fillable = ['visit_id', 'diagnosis', 'symptoms', 'notes', 'created_by'];
+    protected $fillable = ['visit_id', 'diagnosis', 'symptoms', 'test_type', 'test_details', 'notes', 'created_by'];
 
     public function visit()
     {
@@ -17,12 +17,12 @@ class ExaminationEntity extends Model
 
     public function attachments()
     {
-        return $this->hasMany(ExaminationAttachment::class);
+        return $this->hasMany(ExaminationAttachment::class, 'examination_id');
     }
 
     public function drugs()
     {
-        return $this->hasMany(PrescriptionDrugs::class);
+        return $this->hasMany(PrescriptionDrugs::class, 'examination_id');
     }
 
     public function creator()

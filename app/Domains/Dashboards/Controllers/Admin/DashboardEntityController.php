@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Domains\Dashboards\Repositories\DashboardEntityRepository;
 
 class DashboardEntityController extends Controller
-{
+{ 
     protected DashboardEntityRepository $dashboardRepository;
 
     public function __construct(DashboardEntityRepository $dashboardRepository)

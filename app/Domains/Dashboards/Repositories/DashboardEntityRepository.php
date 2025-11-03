@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Domains\Patients\Models\PatientEntity;
 use App\Domains\Visits\Models\VisitEntity;
 use Illuminate\Support\Facades\DB;
-
+ 
 class DashboardEntityRepository
 {
     public function getDashboardStats(): array
@@ -52,19 +52,29 @@ class DashboardEntityRepository
     public function getSalesAndVisitsChartData(int $days = 7)
     {
         $startDate = Carbon::now()->subDays($days - 1)->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
 
         $data = VisitEntity::where('status', 'completed')
-            ->where('created_at', '>=', $startDate)
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->selectRaw('DATE(created_at) as date, SUM(price) as total_revenue, COUNT(*) as visits_count')
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get();
 
-        return $data->map(fn($item) => [
-            'date' => Carbon::parse($item->date)->format('Y-m-d'),
-            'total_revenue' => (float) $item->total_revenue,
-            'visits_count' => (int) $item->visits_count,
-        ]);
+        $results = [];
+        for ($i = 0; $i < $days; $i++) {
+            $date = Carbon::now()->subDays($days - $i - 1)->format('Y-m-d');
+            $existingData = $data->where('date', $date)->first();
+            
+            $results[] = [
+                'date' => $date,
+                'total_revenue' => $existingData ? (float) $existingData->total_revenue : 0,
+                'visits_count' => $existingData ? (int) $existingData->visits_count : 0,
+                'formatted_date' => Carbon::parse($date)->format('d M') 
+            ];
+        }
+
+        return $results;
     }
 
     public function getReservationsDistribution(): array
@@ -77,12 +87,26 @@ class DashboardEntityRepository
             ->pluck('count', 'status')
             ->toArray();
 
-        $defaultStatuses = ['completed', 'pending', 'cancelled', 'missed'];
+        $statusLabels = [
+            'completed' => 'مكتملة',
+            'pending' => 'قيد الانتظار', 
+            'cancelled' => 'ملغية',
+            'missed' => 'فائتة'
+        ];
 
-        foreach ($defaultStatuses as $status) {
-            $data[$status] = $data[$status] ?? 0;
+        $result = [];
+        $total = array_sum($data);
+        
+        foreach ($statusLabels as $status => $label) {
+            $count = $data[$status] ?? 0;
+            $percentage = $total > 0 ? round(($count / $total) * 100, 1) : 0;
+            
+            $result[$label] = [
+                'count' => $count,
+                'percentage' => $percentage
+            ];
         }
 
-        return $data;
+        return $result;
     }
 }

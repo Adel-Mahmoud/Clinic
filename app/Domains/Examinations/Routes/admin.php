@@ -8,5 +8,9 @@ Route::middleware(['web', 'auth.admin'])->prefix('admin')->group(function () {
         Route::get('/', [ExaminationEntityController::class, 'index']);
         Route::post('/store', [ExaminationEntityController::class, 'store'])
             ->name('admin.examinations.store');
+        Route::get('/show/{id}', [ExaminationEntityController::class, 'show'])
+            ->name('admin.examinations.show');
+        Route::get('/print/{id}', [ExaminationEntityController::class, 'print'])
+            ->name('admin.examinations.print');
     });
 });

@@ -35,14 +35,27 @@ class ExaminationEntityController extends Controller
             'attachments.*' => 'file|max:4096'
         ]);
 
-        $this->repo->store($request);
+        $examinationId = $this->repo->store($request);
+        return redirect()->route('admin.examinations.print', $examinationId);
+        // return redirect()
+        //     ->back()
+        //     ->with('swal', [
+        //         'type'  => 'success',
+        //         'title' => 'تم الإضافة!',
+        //         'text'  => 'تم حفظ الكشف بنجاح',
+        //     ]);
+    }
 
-        return redirect()
-            ->back()
-            ->with('swal', [
-                'type'  => 'success',
-                'title' => 'تم الإضافة!',
-                'text'  => 'تم حفظ الكشف بنجاح',
-            ]);
+    public function show(Request $request)
+    {
+        $visit = $this->repo->getVisitById($request->id);
+        return view('examinations::admin.show', compact('visit'));
+
+    }
+    public function print(Request $request)
+    {
+        $visit = $this->repo->getVisitById($request->id);
+        return view('examinations::admin.print', compact('visit'));
+
     }
 }
