@@ -51,6 +51,14 @@ class PatientEntityController extends Controller
         return view('patients::admin.edit', compact('patient', 'sectionPage', 'titlePage'));
     }
 
+    public function history($id): View
+    {
+        $sectionPage = 'المرضى';
+        $titlePage = 'سجل المريض ';
+        $patient_name = $this->repository->findOrFailWithUser($id)->user->name;
+        return view('patients::admin.history', compact('id', 'patient_name', 'sectionPage', 'titlePage'));
+    }
+
     public function update(PatientRequest $request, $id): RedirectResponse
     {
         $this->repository->updateWithUser($id, $request->validated());

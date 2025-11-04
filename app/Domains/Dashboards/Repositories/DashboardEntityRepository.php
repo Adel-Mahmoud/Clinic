@@ -34,7 +34,7 @@ class DashboardEntityRepository
             ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('SUM(price) as total_revenue'),
-                DB::raw('COUNT(*) as total_visits')
+                DB::raw('COUNT(*) as visits_count') 
             )
             ->groupBy('date')
             ->orderBy('date', 'asc')

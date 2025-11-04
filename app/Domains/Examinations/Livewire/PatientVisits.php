@@ -34,7 +34,8 @@ class PatientVisits extends Component
             })
             ->where(function ($q) {
                 $q->where('symptoms', 'like', '%' . $this->search . '%')
-                    ->orWhere('diagnosis', 'like', '%' . $this->search . '%');
+                    ->orWhere('diagnosis', 'like', '%' . $this->search . '%')
+                    ->orWhere('created_at', 'like', '%' . $this->search . '%');
             })
             ->orderByDesc('id')
             ->paginate(10);

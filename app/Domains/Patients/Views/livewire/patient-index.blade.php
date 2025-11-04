@@ -37,7 +37,7 @@
                             <th>الجنس</th>
                             <th>العمر</th>
                             <th>تاريخ الإنشاء</th>
-                            <th width="150">الإجراءات</th>
+                            <th width="170">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,6 +73,9 @@
                             <td>
                                 <a href="{{ route('admin.visits.create.with.patient', $patient->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-calendar-plus"></i> 
+                                </a>
+                                <a href="{{ route('admin.patient.history', $patient->id) }}" class="btn btn-sm btn-info">
+                                    <i class="fas fa-clipboard-list"></i> 
                                 </a>
                                 <a href="{{ route('admin.patients.edit', $patient->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
