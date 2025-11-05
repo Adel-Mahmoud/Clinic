@@ -16,6 +16,12 @@ return [
         'url'    => '/admin/examinations',
     ],
     [
+        'label'  => 'التقارير',
+        'type'   => 'link',
+        'icon'   => '<i class="fas fa-chart-bar me-2"></i>',
+        'url'    => '/admin/reports',
+    ],
+    [
         'label'  => 'الزيارات',
         'type'   => 'dropdown',
         'icon'   => '<i class="fas fa-calendar-check fa-lg menu-icon"></i>',

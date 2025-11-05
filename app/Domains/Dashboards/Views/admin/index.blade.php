@@ -70,7 +70,9 @@
         <div class="card mg-b-20">
             <div class="card-body">
                 <div class="main-content-label mg-b-5">
-                    <i class="fas fa-chart-line me-2"></i>الإيرادات والزيارات الأسبوعية
+                    <i class="fas fa-chart-line me-2"></i>
+                    &nbsp;
+                    الإيرادات والزيارات الأسبوعية
                 </div>
                 <p class="mg-b-20">إحصائيات الإيرادات والزيارات خلال الأيام السبعة الماضية</p>
 
@@ -86,13 +88,61 @@
             <div class="card-body">
                 <div class="mb-2">
                     <div class="main-content-label mg-b-5">
-                        <i class="fas fa-chart-pie me-2"></i>توزيع الحجوزات اليوم
+                        <i class="fas fa-chart-pie me-2"></i>
+                        &nbsp;
+                        توزيع الحجوزات اليوم
                     </div>
                     <p class="mg-b-20">نسبة الحجوزات حسب الحالة</p>
                 </div>
 
                 <div class="chart-container">
                     <div id="flotPie1" class="flot-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">نوع التقرير</label>
+                <select class="form-select" id="reportType">
+                    <option value="financial">التقرير المالي الشامل</option>
+                    <option value="revenue">تقرير الإيرادات</option>
+                    <option value="services">أداء الخدمات</option>
+                    <option value="doctors">أداء الأطباء</option>
+                    <option value="comparison">التقارير المقارنة</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">الفترة</label>
+                <select class="form-select" id="period">
+                    <option value="daily">يومي</option>
+                    <option value="weekly">أسبوعي</option>
+                    <option value="monthly">شهري</option>
+                    <option value="quarterly">ربع سنوي</option>
+                    <option value="yearly">سنوي</option>
+                    <option value="custom">مخصص</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">من تاريخ</label>
+                <input type="date" class="form-control" id="startDate">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">إلى تاريخ</label>
+                <input type="date" class="form-control" id="endDate">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" id="generateReport">
+                        <i class="fas fa-chart-bar me-2"></i>توليد التقرير
+                    </button>
                 </div>
             </div>
         </div>
@@ -122,7 +172,7 @@
 
         const allVisitsZero = barVisits.every(visit => visit === 0);
         if (allVisitsZero) {
-            // console.warn('⚠️ جميع قيم الزيارات صفر، سيتم استخدام بيانات تجريبية');
+            // console.warn(' جميع قيم الزيارات صفر، سيتم استخدام بيانات تجريبية');
             barVisits.forEach((_, index) => {
                 barVisits[index] = Math.max(1, Math.round(barRevenue[index] / 100));
             });
@@ -151,15 +201,19 @@
             }
         ];
 
-
         const barOptions = {
             yaxes: [{
-                    min: 0
+                    min: 0,
+                    tickFormatter: function(val) {
+                        return parseInt(val).toLocaleString();
+                    }
                 },
                 {
                     position: "right",
                     min: 0,
-                    tickFormatter: val => val.toLocaleString() + " زيارة"
+                    tickFormatter: function(val) {
+                        return ''; // parseInt(val).toLocaleString() + " زيارة";
+                    }
                 }
             ],
             grid: {
@@ -173,13 +227,6 @@
                 color: "rgba(171,167,167,0.8)",
                 font: {
                     size: 11
-                }
-            },
-            yaxis: {
-                color: "rgba(171,167,167,0.8)",
-                min: 0,
-                tickFormatter: function(val) {
-                    return val.toLocaleString();
                 }
             },
             legend: {
@@ -265,9 +312,9 @@
             if (item) {
                 let tooltipText = '';
                 if (item.seriesIndex === 0) {
-                    tooltipText = `الإيرادات: ${Number(item.datapoint[1]).toLocaleString()} ج.م<br>التاريخ: ${barLabels[item.dataIndex]}`;
+                    tooltipText = `الإيرادات: ${parseInt(item.datapoint[1]).toLocaleString()} ج.م<br>التاريخ: ${barLabels[item.dataIndex]}`;
                 } else {
-                    tooltipText = `الزيارات: ${Number(item.datapoint[1]).toLocaleString()} زيارة<br>التاريخ: ${barLabels[item.dataIndex]}`;
+                    tooltipText = `الزيارات: ${parseInt(item.datapoint[1]).toLocaleString()} زيارة<br>التاريخ: ${barLabels[item.dataIndex]}`;
                 }
 
                 $("#tooltip")
@@ -290,7 +337,7 @@
 
             const percent = parseFloat(obj.series.percent).toFixed(1);
             $("#tooltip")
-                .html(`${obj.series.label}<br>النسبة: ${percent}%<br>العدد: ${obj.series.data}`)
+                .html(`${obj.series.label}<br>النسبة: ${percent}%<br>العدد: ${parseInt(obj.series.data)}`)
                 .css({
                     top: pos.pageY - 45,
                     left: pos.pageX + 10
