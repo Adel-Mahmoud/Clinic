@@ -293,12 +293,12 @@
         <div class="prescription-header">
             <div class="clinic-info">
                 <div class="clinic-details">
-                    <div class="clinic-name">عيادة الدكتور أحمد محمد</div>
-                    <div class="clinic-specialty">استشاري الباطنة والجهاز الهضمي</div>
+                    <div class="clinic-name">{{ config('settings.project_name') }}</div>
+                    <div class="clinic-specialty">{{ config('settings.short_description') }}</div>
                 </div>
                 <div class="clinic-contact">
-                    <div>📞 0123456789</div>
-                    <div>📍 الرياض - الملك فهد</div>
+                    <div>📞 {{ config('settings.phone') }}</div>
+                    <div>📍 {{ config('settings.address') }}</div>
                 </div>
             </div>
         </div>
@@ -376,14 +376,14 @@
         <div class="prescription-footer">
             <div class="doctor-signature">
                 <div>توقيع الطبيب</div>
-                <div class="signature-line">د. أحمد محمد</div>
+                <div class="signature-line">{{ auth()->user()->name }}</div>
             </div>
             <div class="date-info">
-                تم الإنشاء: <span id="creation-time">20/03/2024 10:30 ص</span>
+                تم الإنشاء: <span id="creation-time">{{ \Carbon\Carbon::parse($visit->visit->created_at)->format('d M Y H:i') }}</span>
             </div>
             <div>
-                📞 0123456789<br>
-                للطوارئ: 0501234567
+                📞 {{ config('settings.phone') }}<br>
+                للطوارئ: {{ config('settings.emergency_phone') }}
             </div>
         </div>
     </div>

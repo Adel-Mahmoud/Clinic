@@ -103,51 +103,6 @@
     </div>
 </div>
 
-
-
-<div class="card">
-    <div class="card-body">
-        <div class="row g-3">
-            <div class="col-md-3">
-                <label class="form-label">نوع التقرير</label>
-                <select class="form-select" id="reportType">
-                    <option value="financial">التقرير المالي الشامل</option>
-                    <option value="revenue">تقرير الإيرادات</option>
-                    <option value="services">أداء الخدمات</option>
-                    <option value="doctors">أداء الأطباء</option>
-                    <option value="comparison">التقارير المقارنة</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">الفترة</label>
-                <select class="form-select" id="period">
-                    <option value="daily">يومي</option>
-                    <option value="weekly">أسبوعي</option>
-                    <option value="monthly">شهري</option>
-                    <option value="quarterly">ربع سنوي</option>
-                    <option value="yearly">سنوي</option>
-                    <option value="custom">مخصص</option>
-                </select>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">من تاريخ</label>
-                <input type="date" class="form-control" id="startDate">
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">إلى تاريخ</label>
-                <input type="date" class="form-control" id="endDate">
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">&nbsp;</label>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary" id="generateReport">
-                        <i class="fas fa-chart-bar me-2"></i>توليد التقرير
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- row closed -->
 @endsection
 

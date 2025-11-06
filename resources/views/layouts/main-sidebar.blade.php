@@ -17,20 +17,8 @@
 	</div>
 
 	<div class="main-sidemenu">
-		<div class="app-sidebar__user clearfix">
-			<div class="dropdown user-pro-body">
-				<div class="">
-					<img alt="user-img" class="avatar avatar-xl brround" src="{{ URL::asset('assets/img/faces/6.jpg') }}">
-					<span class="avatar-status profile-status bg-green"></span>
-				</div>
-				<div class="user-info">
-					<h4 class="font-weight-semibold mt-3 mb-0">{{ auth('admin')->user()->name ?? 'No Name' }}</h4>
-					<span class="mb-0 text-muted">{{ auth('admin')->user()->email ?? 'No Email' }}</span>
-				</div>
-			</div>
-		</div>
 
-		<ul class="side-menu">
+		<ul class="side-menu" style="margin-top: 20px;">
 			@foreach(config('menu') as $item)
 				@if($item['type'] === 'link')
 					<li class="slide">
