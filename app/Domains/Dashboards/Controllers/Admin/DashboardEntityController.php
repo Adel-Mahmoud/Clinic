@@ -12,6 +12,8 @@ class DashboardEntityController extends Controller
     public function __construct(DashboardEntityRepository $dashboardRepository)
     {
         $this->dashboardRepository = $dashboardRepository;
+        // Permissions
+        $this->middleware('permission:view dashboard')->only(['index']);
     }
 
     public function index()

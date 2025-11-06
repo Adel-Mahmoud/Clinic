@@ -83,11 +83,13 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                            @can('print prescription')
                             <a href="{{ route('admin.examinations.print', $visit->id) }}"
                                 class="btn btn-secondary">
                                 <i class="fe fe-printer"></i>
                                 طباعة الروشتة
                             </a>
+                            @endcan
                         </div>
                     </div>
 

@@ -21,32 +21,41 @@
 		<ul class="side-menu" style="margin-top: 20px;">
 			@foreach(config('menu') as $item)
 				@if($item['type'] === 'link')
-					<li class="slide">
-						<a class="side-menu__item" href="{{ url($item['url']) }}">
-							{!! $item['icon'] !!}
-							<span class="mr-2 side-menu__label" style="font-size: medium;">{{ $item['label'] }}</span>
-							@if(isset($item['badge']))
-								<span class="badge badge-{{ $item['badge-color'] }} side-badge">{{ $item['badge'] }}</span>
-							@endif
-						</a>
-					</li>
+					@if(!isset($item['can']) || auth()->user()->can($item['can']))
+						<li class="slide">
+							<a class="side-menu__item" href="{{ url($item['url']) }}">
+								{!! $item['icon'] !!}
+								<span class="mr-2 side-menu__label" style="font-size: medium;">{{ $item['label'] }}</span>
+								@if(isset($item['badge']))
+									<span class="badge badge-{{ $item['badge-color'] }} side-badge">{{ $item['badge'] }}</span>
+								@endif
+							</a>
+						</li>
+					@endif
 				@elseif($item['type'] === 'dropdown')
-					<li class="slide">
-						<a class="side-menu__item" data-toggle="slide" href="#">
-							{!! $item['icon'] !!}
-							<span class="mr-2 side-menu__label" style="font-size: medium;">{{ $item['label'] }}</span>
-							<i class="angle fe fe-chevron-down"></i>
-						</a>
-						<ul class="slide-menu">
-							@foreach($item['children'] as $child)
-								<li>
-									<a class="slide-item" href="{{ url($child['url']) }}" style="font-size: small;">
-										{{ $child['label'] }}
-									</a>
-								</li>
-							@endforeach
-						</ul>
-					</li>
+					@php
+						$visibleChildren = array_filter($item['children'], function ($child) {
+							return !isset($child['can']) || auth()->user()->can($child['can']);
+						});
+					@endphp
+					@if(count($visibleChildren))
+						<li class="slide">
+							<a class="side-menu__item" data-toggle="slide" href="#">
+								{!! $item['icon'] !!}
+								<span class="mr-2 side-menu__label" style="font-size: medium;">{{ $item['label'] }}</span>
+								<i class="angle fe fe-chevron-down"></i>
+							</a>
+							<ul class="slide-menu">
+								@foreach($visibleChildren as $child)
+									<li>
+										<a class="slide-item" href="{{ url($child['url']) }}" style="font-size: small;">
+											{{ $child['label'] }}
+										</a>
+									</li>
+								@endforeach
+							</ul>
+						</li>
+					@endif
 				@endif
 			@endforeach
 		</ul>

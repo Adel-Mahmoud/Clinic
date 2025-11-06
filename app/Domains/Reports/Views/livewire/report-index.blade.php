@@ -61,9 +61,11 @@
                 </div>
 
                 <div class="col-md-3 d-flex align-items-end">
+                    @can('generate reports')
                     <button class="btn btn-primary w-100" wire:click="generate">
                         <i class="fas fa-chart-bar me-2"></i>توليد التقرير
                     </button>
+                    @endcan
                 </div>
 
             </div>

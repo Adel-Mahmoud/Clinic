@@ -20,13 +20,17 @@
             </div>
             <div class="col-12 col-md-3 text-md-end text-left">
                 @if(count($selected) > 0)
+                @can('delete visit')
                 <button wire:click="confirmDeleteSelected" class="btn btn-danger">
                     <i class="fas fa-trash"></i> حذف الزيارات المحددة ({{ count($selected) }})
                 </button>
+                @endcan
                 @else
+                @can('create visit')
                 <a href="{{ route('admin.visits.create') }}" class="btn btn-primary mb-2 mb-md-0">
                     <i class="fas fa-plus"></i> إضافة زيارة جديدة
                 </a>
+                @endcan
                 @endif
             </div>
         </div>
@@ -87,13 +91,17 @@
                                 @endif
                             </td>
                             <td>
+                                @can('edit visit')
                                 <a href="{{ route('admin.visits.edit', $visit->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                @endcan
+                                @can('delete visit')
                                 <button wire:click="confirmDelete({{ $visit->id }})"
                                     class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                @endcan
                             </td>
                         </tr>
                         @empty

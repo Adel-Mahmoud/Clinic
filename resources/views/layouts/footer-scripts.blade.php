@@ -15,7 +15,7 @@
 
 <!--Internal  Perfect-scrollbar js -->
 <script src="{{URL::asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
-<script src="{{URL::asset('assets/plugins/perfect-scrollbar/p-scroll.js')}}"></script>
+<!-- <script src="{{URL::asset('assets/plugins/perfect-scrollbar/p-scroll.js')}}"></script> -->
 <!--Internal Sparkline js -->
 <script src="{{URL::asset('assets/plugins/jquery-sparkline/jquery.sparkline.min.js')}}"></script>
 <!-- Custom Scroll bar Js-->

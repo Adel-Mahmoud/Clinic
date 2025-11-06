@@ -6,6 +6,7 @@ namespace App\Providers;
 // use App\Domains\Users\Policies\UserPolicy;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,5 +17,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         Route::aliasMiddleware('auth.admin', \App\Http\Middleware\RedirectIfNotAdmin::class);
+        // $this->registerPolicies();
+        // Gate::before(function ($user, $ability) {
+        //     return $user->hasRole('super-admin') ? true : null;
+        // });
     }
+
 }

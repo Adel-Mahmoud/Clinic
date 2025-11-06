@@ -13,6 +13,10 @@ class ExaminationEntityController extends Controller
     public function __construct(ExaminationEntityRepository $repo)
     {
         $this->repo = $repo;
+        // Permissions
+        $this->middleware('permission:view examinations')->only(['index', 'show']);
+        $this->middleware('permission:create examination')->only(['store']);
+        $this->middleware('permission:print prescription')->only(['print']);
     }
 
     public function index()

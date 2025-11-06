@@ -16,6 +16,12 @@ class DrugEntityController extends Controller
     public function __construct(DrugEntityRepository $repository)
     {
         $this->repository = $repository;
+        // Permissions
+        $this->middleware('permission:view drugs')->only(['index']);
+        $this->middleware('permission:create drug')->only(['create', 'store']);
+        $this->middleware('permission:edit drug')->only(['edit', 'update']);
+        $this->middleware('permission:delete drug')->only(['destroy']);
+        $this->middleware('permission:import drugs')->only(['import']);
     }
 
     public function index(): View

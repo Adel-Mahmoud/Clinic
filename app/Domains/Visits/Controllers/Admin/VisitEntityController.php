@@ -15,6 +15,11 @@ class VisitEntityController extends Controller
     public function __construct(VisitEntityRepository $repository)
     {
         $this->repository = $repository;
+        // Permissions
+        $this->middleware('permission:view visits')->only(['index']);
+        $this->middleware('permission:create visit')->only(['create', 'store']);
+        $this->middleware('permission:edit visit')->only(['edit', 'update']);
+        $this->middleware('permission:delete visit')->only(['destroy']);
     }
 
     public function index(): View

@@ -6,13 +6,17 @@
             </div>
             <div class="col-12 col-md-8 text-md-end text-left">
                 @if(count($selected) > 0)
+                @can('delete patient')
                 <button wire:click="confirmDeleteSelected" class="btn btn-danger">
                     <i class="fas fa-trash"></i> حذف العناصر المحددة ({{ count($selected) }})
                 </button>
+                @endcan
                 @else
+                @can('create patient')
                 <a href="{{ route('admin.patients.create') }}" class="btn btn-primary mb-2 mb-md-0">
                     <i class="fas fa-plus"></i> إضافة مريض جديد
                 </a>
+                @endcan
                 @endif
             </div>
         </div>
@@ -71,19 +75,27 @@
                             </td>
                             <td>{{ $patient->created_at?->format('Y-m-d') }}</td>
                             <td>
+                                @can('create visit')
                                 <a href="{{ route('admin.visits.create.with.patient', $patient->id) }}" class="btn btn-sm btn-success">
                                     <i class="fas fa-calendar-plus"></i> 
                                 </a>
+                                @endcan
+                                @can('view visits')
                                 <a href="{{ route('admin.patient.history', $patient->id) }}" class="btn btn-sm btn-info">
                                     <i class="fas fa-clipboard-list"></i> 
                                 </a>
+                                @endcan
+                                @can('edit patient')
                                 <a href="{{ route('admin.patients.edit', $patient->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                @endcan
+                                @can('delete patient')
                                 <button wire:click="confirmDelete({{ $patient->id }})"
                                     class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                @endcan
                             </td>
                         </tr>
                         @empty

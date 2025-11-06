@@ -16,6 +16,11 @@ class UserEntityController extends Controller
     public function __construct(UserEntityRepository $repository)
     {
         $this->repository = $repository;
+        // Permissions
+        $this->middleware('permission:view users')->only(['index']);
+        $this->middleware('permission:create user')->only(['create', 'store']);
+        $this->middleware('permission:edit user')->only(['edit', 'update']);
+        $this->middleware('permission:delete user')->only(['destroy']);
     }
 
     public function index(): View

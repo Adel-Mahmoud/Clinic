@@ -144,8 +144,10 @@
                 
                 
                                     <div class="text-center mt-4">
+                                        @can('create examination')
                                         <button type="submit" class="m-auto btn btn-primary btn-lg submit px-5">
                                             <i class="fe fe-save me-2"></i> حفظ الكشف</button>
+                                        @endcan
                                     </div>
                                 </form>
                             </div>

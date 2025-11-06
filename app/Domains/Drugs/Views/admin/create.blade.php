@@ -7,6 +7,7 @@
 @endsection
 @section('content')
 <div class="card mt-4">
+    @can('import drugs')
     <div class="card-header bg-primary text-white">
         <h6 class="mb-0">استيراد الأدوية من ملف Excel</h6>
     </div>
@@ -24,6 +25,7 @@
             </button>
         </form>
     </div>
+    @endcan
 </div>
 <x-form
     :action="route('admin.drugs.store')"

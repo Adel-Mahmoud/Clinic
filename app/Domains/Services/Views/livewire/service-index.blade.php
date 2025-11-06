@@ -6,13 +6,17 @@
             </div>
             <div class="col-12 col-md-8 text-md-end text-left">
                 @if(count($selected) > 0)
+                @can('delete service')
                 <button wire:click="confirmDeleteSelected" class="btn btn-danger">
                     <i class="fas fa-trash"></i> حذف العناصر المحددة ({{ count($selected) }})
                 </button>
+                @endcan
                 @else
+                @can('create service')
                 <a href="{{ route('admin.services.create') }}" class="btn btn-primary mb-2 mb-md-0">
                     <i class="fas fa-plus"></i> إضافة خدمة جديدة
                 </a>
+                @endcan
                 @endif
             </div>
         </div>
@@ -61,13 +65,17 @@
                             </td>
                             <td>{{ $service->created_at->format('Y-m-d') }}</td>
                             <td>
+                                @can('edit service')
                                 <a href="{{ route('admin.services.edit', $service->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i>
                                 </a>
+                                @endcan
+                                @can('delete service')
                                 <button wire:click="confirmDelete({{ $service->id }})"
                                     class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                @endcan
                             </td>
                         </tr>
                         @empty

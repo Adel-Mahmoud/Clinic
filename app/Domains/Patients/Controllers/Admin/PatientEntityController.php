@@ -15,6 +15,11 @@ class PatientEntityController extends Controller
     public function __construct(PatientEntityRepository $repository)
     {
         $this->repository = $repository;
+        // Permissions
+        $this->middleware('permission:view patients')->only(['index', 'history']);
+        $this->middleware('permission:create patient')->only(['create', 'store']);
+        $this->middleware('permission:edit patient')->only(['edit', 'update']);
+        $this->middleware('permission:delete patient')->only(['destroy']);
     }
 
     public function index(): View

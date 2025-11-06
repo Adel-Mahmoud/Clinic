@@ -15,6 +15,11 @@ class ServiceEntityController extends Controller
     public function __construct(ServiceEntityRepository $repository)
     {
         $this->repository = $repository;
+        // Permissions
+        $this->middleware('permission:view services')->only(['index']);
+        $this->middleware('permission:create service')->only(['create', 'store']);
+        $this->middleware('permission:edit service')->only(['edit', 'update']);
+        $this->middleware('permission:delete service')->only(['destroy']);
     }
 
     public function index(): View
