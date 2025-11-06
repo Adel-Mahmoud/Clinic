@@ -15,10 +15,6 @@ body {
 }
 
 .submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
     cursor: pointer;
 }
 
@@ -45,6 +41,8 @@ body {
         transform: rotate(360deg);
     }
 }
+
+
 
 /* .main-logo{
     height: 4rem !important;

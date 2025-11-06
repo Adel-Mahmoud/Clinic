@@ -78,7 +78,7 @@
                     </div>
 
                     <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary">إضافة الدور</button>
+                        <button type="submit" class="btn btn-primary submit d-inline-flex align-items-center gap-3">إضافة الدور</button>
                         <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary">رجوع</a>
                     </div>
                 </form>

@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary">تحديث الصلاحية</button>
+                        <button type="submit" class="btn btn-primary submit d-inline-flex align-items-center gap-3">تحديث الصلاحية</button>
                         <a href="{{ route('admin.permissions.index') }}" class="btn btn-secondary">إلغاء</a>
                     </div>
                 </form>

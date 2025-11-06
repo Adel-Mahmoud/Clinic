@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary">تحديث الدور</button>
+                        <button type="submit" class="btn btn-primary submit d-inline-flex align-items-center gap-3">تحديث الدور</button>
                         <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary">إلغاء</a>
                     </div>
                 </form>

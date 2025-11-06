@@ -19,7 +19,7 @@
                     @error('file') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-success submit d-inline-flex align-items-center gap-3">
                 <i class="fas fa-file-excel"></i> استيراد الآن
             </button>
         </form>

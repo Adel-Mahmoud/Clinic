@@ -17,7 +17,7 @@
                         {{ $slot }}
 
                     <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary">{{ $submitLabel }}</button>
+                        <button type="submit" class="btn btn-primary submit d-inline-flex align-items-center gap-3">{{ $submitLabel }}</button>
 
                         @if($cancelRoute)
                         <a href="{{ route($cancelRoute) }}" class="btn btn-secondary">رجوع</a>

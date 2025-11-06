@@ -38,7 +38,7 @@
                                                 <label>كلمة المرور</label>
                                                 <input class="form-control" name="password" placeholder="أدخل كلمة المرور" type="password" required>
                                             </div>
-                                            <button class="btn btn-main-primary btn-block submit">تسجيل الدخول</button>
+                                            <button class="btn btn-main-primary btn-block  submit d-inline-flex align-items-center gap-3">تسجيل الدخول</button>
                                         </form>
                                         <!-- <div class="main-signin-footer mt-5">
                                             <p><a href="#">هل نسيت كلمة المرور؟</a></p>
