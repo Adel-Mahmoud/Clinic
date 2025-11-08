@@ -87,7 +87,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">الخدمة <span class="text-danger">*</span></label>
-                        <select id="service_id" wire:model="service_id" class="form-control @error('service_id') is-invalid @enderror">
+                        <select id="service_id" wire:model="service_id" class="form-control @error('service_id') is-invalid @enderror" required>
                             <option value="">اختر الخدمة</option>
                             @foreach($services as $service)
                             <option data-price="{{ $service->price }}" value="{{ $service->id }}">{{ $service->name }}</option>

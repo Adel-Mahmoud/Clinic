@@ -20,7 +20,7 @@
                     <div class="row">
                         <div class="col-md-10 col-lg-10 col-xl-9 mx-auto">
                             <div class="card-sigin">
-                                <div class="mb-5 d-flex">
+                                <div class="mb-5 d-flex justify-content-center align-items-center">
                                     <img src="{{ config('settings.logo') ? asset('storage/' . config('settings.logo')) : URL::asset('assets/img/brand/favicon.png') }}" class="sign-favicon ht-40" alt="الشعار">
                                     <h1 class="main-logo1 ml-1 mr-0 my-auto tx-28">{{ config('settings.project_name') }}</span></h1>
                                 </div>
@@ -30,6 +30,9 @@
                                         <h5 class="font-weight-semibold mb-4">يرجى تسجيل الدخول للمتابعة</h5>
                                         <form method="POST" action="{{ route('admin.login.submit') }}">
                                             @csrf
+                                            @if (session('error'))
+                                                <div class="alert alert-danger">{{ session('error') }}</div>
+                                            @endif
                                             <div class="form-group">
                                                 <label>البريد الإلكتروني</label>
                                                 <input class="form-control" name="email" placeholder="أدخل بريدك الإلكتروني" type="email" required>
@@ -38,7 +41,10 @@
                                                 <label>كلمة المرور</label>
                                                 <input class="form-control" name="password" placeholder="أدخل كلمة المرور" type="password" required>
                                             </div>
-                                            <button class="btn btn-main-primary btn-block  submit d-inline-flex align-items-center gap-3">تسجيل الدخول</button>
+                                            <button class="btn btn-main-primary btn-block submit d-flex justify-content-center align-items-center gap-2">
+                                                تسجيل الدخول
+                                                &nbsp;
+                                            </button>
                                         </form>
                                         <!-- <div class="main-signin-footer mt-5">
                                             <p><a href="#">هل نسيت كلمة المرور؟</a></p>
