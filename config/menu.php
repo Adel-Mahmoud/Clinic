@@ -6,7 +6,6 @@ return [
         'type'   => 'link',
         'icon'   => '<i class="fas fa-home fa-lg menu-icon"></i>',
         'url'    => '/admin/dashboard',
-        'can'    => 'view dashboard',
         // 'badge'  => 1,
         // 'badge-color'  => 'success',
     ],

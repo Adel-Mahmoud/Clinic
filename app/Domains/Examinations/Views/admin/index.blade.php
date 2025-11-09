@@ -4,7 +4,7 @@
 @section('css')
 <link href="{{ URL::asset('assets/plugins/fileuploads/css/fileupload.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ URL::asset('assets/plugins/fancyuploder/fancy_fileupload.css') }}" rel="stylesheet" />
-<link href="{{ URL::asset('assets/css/examination.css') }}" rel="stylesheet" />
+<link href="{{ URL::asset('assets/custom/css/examination.css') }}" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -176,5 +176,5 @@
 <script>
     const allDrugs = @json($drugs->pluck('name'));
 </script>
-<script src="{{ URL::asset('assets/js/examination.js') }}"></script>
+<script src="{{ URL::asset('assets/custom/js/examination.js') }}"></script>
 @endsection

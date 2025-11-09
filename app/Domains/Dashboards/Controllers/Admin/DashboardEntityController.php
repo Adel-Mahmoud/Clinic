@@ -13,7 +13,7 @@ class DashboardEntityController extends Controller
     {
         $this->dashboardRepository = $dashboardRepository;
         // Permissions
-        $this->middleware('permission:view dashboard')->only(['index']);
+        // $this->middleware('permission:view dashboard')->only(['index']);
     }
 
     public function index()
