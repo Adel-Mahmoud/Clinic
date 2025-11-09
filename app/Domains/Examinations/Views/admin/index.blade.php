@@ -142,10 +142,9 @@
                                         </div>
                                     </div>
                 
-                
                                     <div class="text-center mt-4">
                                         @can('create examination')
-                                        <button type="submit" class="m-auto btn btn-primary btn-lg submit px-5">
+                                        <button type="submit" class="m-auto btn btn-primary btn-lg submit px-5 d-flex justify-content-center align-items-center gap-2">
                                             <i class="fe fe-save me-2"></i> حفظ الكشف</button>
                                         @endcan
                                     </div>

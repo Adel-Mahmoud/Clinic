@@ -30,7 +30,7 @@
 
                 <div class="col-md-3">
                     <label class="form-label">نوع الخدمة</label>
-                    <select class="form-control" wire:model.defer="serviceId">
+                    <select class="form-control" wire:model.change="serviceId">
                         <option value="" selected>كل الخدمات</option>
                         @foreach($getAllServices as $serves)
                         <option value="{{ $serves->id }}">{{ $serves->name }}</option>

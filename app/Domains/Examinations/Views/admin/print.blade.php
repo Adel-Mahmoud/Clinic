@@ -77,8 +77,8 @@
         }
 
         .info-item {
-            display: flex;
-            justify-content: space-between;
+            /* display: flex;
+            justify-content: space-between; */
         }
 
         .info-label {
