@@ -10,10 +10,14 @@ class SettingsServiceProvider extends ServiceProvider
 {
     public function boot(SettingEntityRepository $repository)
     {
+        /*
         $settings = cache()->rememberForever('settings', function () use ($repository) {
             return $repository->all()->first()?->toArray() ?? [];
         });
 
-        Config::set('settings', $settings);
+        Config::set('settings', $settings); 
+        */
+
+        Config::set('settings', $repository->all()->first()?->toArray() ?? []);
     }
 }
